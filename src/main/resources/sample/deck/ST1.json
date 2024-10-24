@@ -1,0 +1,70 @@
+{
+  "digiegg_deck": [
+    {
+      "card_number": "ST1-01",
+      "quantity": 4
+    }
+  ],
+  "deck": [
+    {
+      "card_number": "ST1-02",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-03",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-04",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-05",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-06",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-07",
+      "quantity": 2
+    },
+    {
+      "card_number": "ST1-08",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-09",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-10",
+      "quantity": 2
+    },
+    {
+      "card_number": "ST1-11",
+      "quantity": 2
+    },
+    {
+      "card_number": "ST1-12",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-13",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-14",
+      "quantity": 4
+    },
+    {
+      "card_number": "ST1-15",
+      "quantity": 2
+    },
+    {
+      "card_number": "ST1-16",
+      "quantity": 2
+    }
+  ]
+}

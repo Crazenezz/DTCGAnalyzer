@@ -1,0 +1,478 @@
+[
+  {
+    "_id": {
+      "$oid": "64410e8d15dcfa7dec03c5c7"
+    },
+    "card_number": "ST2-01",
+    "card_name": "ツノモン",
+    "card_name_romaji": "Tsunomon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-01.png",
+    "deck_number": "ST2",
+    "attribute": "",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Tsunomon",
+    "card_type": "Digi-Egg",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "In-Training",
+    "inherit_effect": "[Your Turn] This Digimon gets +1000 DP when battling an opponent's Digimon that has no digivolution cards.",
+    "level": "2",
+    "play_cost": "",
+    "rarity": "Uncommon",
+    "security_effect": "",
+    "type": "Lesser"
+  },
+  {
+    "_id": {
+      "$oid": "64410e8e15dcfa7dec03c5c8"
+    },
+    "card_number": "ST2-03",
+    "card_name": "ガブモン",
+    "card_name_romaji": "Gabumon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-03.png",
+    "deck_number": "ST2",
+    "attribute": "Data",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Gabumon",
+    "card_type": "Digimon",
+    "digimon_power": "2000 DP",
+    "digivolution": [
+      {
+        "cost": "0",
+        "colour": "Blue",
+        "level": "2"
+      }
+    ],
+    "form": "Rookie",
+    "inherit_effect": "[When Attacking] Trash the digivolution card at the bottom of 1 of your opponent's Digimon with a level of 5 or less.",
+    "level": "3",
+    "play_cost": "3",
+    "rarity": "Uncommon",
+    "security_effect": "",
+    "type": "Reptile"
+  },
+  {
+    "_id": {
+      "$oid": "64410e8815dcfa7dec03c5c3"
+    },
+    "card_number": "ST2-11",
+    "card_name": "メタルガルルモン",
+    "card_name_romaji": "MetalGarurumon",
+    "card_price_jpy": "180",
+    "card_price_idr": "19990.40",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-11.png",
+    "deck_number": "ST2",
+    "attribute": "Data",
+    "card_colour": "Blue",
+    "card_effect": "[When Attacking] [Once Per Turn] Unsuspend this Digimon",
+    "card_name_english": "MetalGarurumon",
+    "card_type": "Digimon",
+    "digimon_power": "11000 DP",
+    "digivolution": [
+      {
+        "cost": "4",
+        "colour": "Blue",
+        "level": "5"
+      }
+    ],
+    "form": "Mega",
+    "inherit_effect": "",
+    "level": "6",
+    "play_cost": "11",
+    "rarity": "Super Rare",
+    "security_effect": "",
+    "type": "Cyborg"
+  },
+  {
+    "_id": {
+      "$oid": "64410e8c15dcfa7dec03c5c6"
+    },
+    "card_number": "ST2-12",
+    "card_name": "石田ヤマト",
+    "card_name_romaji": "Ishida Yamato",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-12.png",
+    "deck_number": "ST2",
+    "attribute": "",
+    "card_colour": "Blue",
+    "card_effect": "[Start of Your Turn] If your opponent has a Digimon with no Digivolution cards, gain 1 memory.",
+    "card_name_english": "Matt Ishida",
+    "card_type": "Tamer",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "2",
+    "rarity": "Rare",
+    "security_effect": "[Security] Play this card without paying its memory cost.",
+    "type": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e8a15dcfa7dec03c5c5"
+    },
+    "card_number": "ST2-10",
+    "card_name": "プレシオモン",
+    "card_name_romaji": "Plesiomon",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-10.png",
+    "deck_number": "ST2",
+    "attribute": "Data",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Plesiomon",
+    "card_type": "Digimon",
+    "digimon_power": "12000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Blue",
+        "level": "5"
+      }
+    ],
+    "form": "Mega",
+    "inherit_effect": "",
+    "level": "6",
+    "play_cost": "10",
+    "rarity": "Rare",
+    "security_effect": "",
+    "type": "Plesiosaur"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9115dcfa7dec03c5ca"
+    },
+    "card_number": "ST2-09",
+    "card_name": "ズドモン",
+    "card_name_romaji": "Zudomon",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-09.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "[When Digivolving] Trash 2 digivolution cards at the bottom of 1 of your opponent's Digimon.",
+    "card_name_english": "Zudomon",
+    "card_type": "Digimon",
+    "digimon_power": "7000 DP",
+    "digivolution": [
+      {
+        "cost": "3",
+        "colour": "Blue",
+        "level": "4"
+      }
+    ],
+    "form": "Ultimate",
+    "inherit_effect": "",
+    "level": "5",
+    "play_cost": "6",
+    "rarity": "Uncommon",
+    "security_effect": "",
+    "type": "Sea Beast"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9515dcfa7dec03c5cc"
+    },
+    "card_number": "ST2-02",
+    "card_name": "ゴマモン",
+    "card_name_romaji": "Gomamon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-02.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Gomamon",
+    "card_type": "Digimon",
+    "digimon_power": "3000 DP",
+    "digivolution": [
+      {
+        "cost": "0",
+        "colour": "Blue",
+        "level": "2"
+      }
+    ],
+    "form": "Rookie",
+    "inherit_effect": "",
+    "level": "3",
+    "play_cost": "2",
+    "rarity": "Common",
+    "security_effect": "",
+    "type": "Sea Beast"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9d15dcfa7dec03c5d2"
+    },
+    "card_number": "ST2-15",
+    "card_name": "カイザーネイル",
+    "card_name_romaji": "Kaiser Nail",
+    "card_price_jpy": "320",
+    "card_price_idr": "35538.50",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-15.png",
+    "deck_number": "ST2",
+    "attribute": "",
+    "card_colour": "Blue",
+    "card_effect": "[Main] Choose a Digimon digivolution card placed under 1 of your Digimon and play it as another Digimon without paying its memory cost.",
+    "card_name_english": "Kaiser Nail",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "4",
+    "rarity": "Common",
+    "security_effect": "[Security] Activate this card's [Main] effect.",
+    "type": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e9715dcfa7dec03c5ce"
+    },
+    "card_number": "ST2-05",
+    "card_name": "イッカクモン",
+    "card_name_romaji": "Ikkakumon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-05.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Ikkakumon",
+    "card_type": "Digimon",
+    "digimon_power": "5000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Blue",
+        "level": "3"
+      }
+    ],
+    "form": "Champion",
+    "inherit_effect": "",
+    "level": "4",
+    "play_cost": "4",
+    "rarity": "Common",
+    "security_effect": "",
+    "type": "Sea Beast"
+  },
+  {
+    "_id": {
+      "$oid": "64410e8915dcfa7dec03c5c4"
+    },
+    "card_number": "ST2-08",
+    "card_name": "ワーガルルモン",
+    "card_name_romaji": "WereGarurumon",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-08.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "WereGarurumon",
+    "card_type": "Digimon",
+    "digimon_power": "7000 DP",
+    "digivolution": [
+      {
+        "cost": "3",
+        "colour": "Blue",
+        "level": "4"
+      }
+    ],
+    "form": "Ultimate",
+    "inherit_effect": "[Your Turn] While your opponent has a Digimon with no digivolution cards, this Digimon gains ＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
+    "level": "5",
+    "play_cost": "7",
+    "rarity": "Rare",
+    "security_effect": "",
+    "type": "Beastkin"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9615dcfa7dec03c5cd"
+    },
+    "card_number": "ST2-04",
+    "card_name": "ベアモン",
+    "card_name_romaji": "Bearmon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-04.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Bearmon",
+    "card_type": "Digimon",
+    "digimon_power": "4000 DP",
+    "digivolution": [
+      {
+        "cost": "0",
+        "colour": "Blue",
+        "level": "2"
+      }
+    ],
+    "form": "Rookie",
+    "inherit_effect": "",
+    "level": "3",
+    "play_cost": "3",
+    "rarity": "Common",
+    "security_effect": "",
+    "type": "Beast"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9a15dcfa7dec03c5d0"
+    },
+    "card_number": "ST2-13",
+    "card_name": "ハンマースパーク",
+    "card_name_romaji": "Hammer Spark",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-13.png",
+    "deck_number": "ST2",
+    "attribute": "",
+    "card_colour": "Blue",
+    "card_effect": "[Main] Gain 1 memory.",
+    "card_name_english": "Hammer Spark",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "0",
+    "rarity": "Common",
+    "security_effect": "[Security] Gain 2 memory.",
+    "type": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e9815dcfa7dec03c5cf"
+    },
+    "card_number": "ST2-07",
+    "card_name": "グリズモン",
+    "card_name_romaji": "Gryzmon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-07.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "＜Blocker＞ (When an opponent's Digimon attacks, you may suspend this Digimon to force the opponent to attack it instead).[When Attacking] Lose 2 memory.",
+    "card_name_english": "Grizzlymon",
+    "card_type": "Digimon",
+    "digimon_power": "6000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Blue",
+        "level": "3"
+      }
+    ],
+    "form": "Champion",
+    "inherit_effect": "",
+    "level": "4",
+    "play_cost": "5",
+    "rarity": "Common",
+    "security_effect": "",
+    "type": "Beast"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9015dcfa7dec03c5c9"
+    },
+    "card_number": "ST2-06",
+    "card_name": "ガルルモン",
+    "card_name_romaji": "Garurumon",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-06.png",
+    "deck_number": "ST2",
+    "attribute": "Vaccine",
+    "card_colour": "Blue",
+    "card_effect": "",
+    "card_name_english": "Garurumon",
+    "card_type": "Digimon",
+    "digimon_power": "4000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Blue",
+        "level": "3"
+      }
+    ],
+    "form": "Champion",
+    "inherit_effect": "[When Attacking] Trash the digivolution card at the bottom of 1 of your opponent's Digimon.",
+    "level": "4",
+    "play_cost": "5",
+    "rarity": "Uncommon",
+    "security_effect": "",
+    "type": "Beast"
+  },
+  {
+    "_id": {
+      "$oid": "64410e9315dcfa7dec03c5cb"
+    },
+    "card_number": "ST2-16",
+    "card_name": "コキュートスブレス",
+    "card_name_romaji": "Cocytus Breath",
+    "card_price_jpy": "180",
+    "card_price_idr": "19990.40",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-16.png",
+    "deck_number": "ST2",
+    "attribute": "",
+    "card_colour": "Blue",
+    "card_effect": "[Main] Return one of your opponent's Digimon to its owner's hand.",
+    "card_name_english": "Cocytus Breath",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "7",
+    "rarity": "Uncommon",
+    "security_effect": "[Security] Activate this card's [Main] effect.",
+    "type": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e9c15dcfa7dec03c5d1"
+    },
+    "card_number": "ST2-14",
+    "card_name": "ソローブルー",
+    "card_name_romaji": "Sorrow Blue",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST2-14.png",
+    "deck_number": "ST2",
+    "attribute": "",
+    "card_colour": "Blue",
+    "card_effect": "[Main] Choose 1 of your opponent's Digimon with no digivolution cards. That Digimon can't attack or block until the end of your opponent's next turn.",
+    "card_name_english": "Sorrow Blue",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "2",
+    "rarity": "Common",
+    "security_effect": "[Security] Choose 1 of your opponent's Digimon with no digivolution cards. That Digimon can't attack or block until the end of your next turn.",
+    "type": ""
+  }
+]

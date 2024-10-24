@@ -1,0 +1,478 @@
+[
+  {
+    "_id": {
+      "$oid": "64410e725aefbfff8f76ede5"
+    },
+    "card_number": "ST1-07",
+    "card_name": "グレイモン",
+    "card_name_romaji": "Greymon",
+    "card_price_jpy": "220",
+    "card_price_idr": "24432.72",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-07.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Greymon",
+    "card_type": "Digimon",
+    "digimon_power": "4000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Red",
+        "level": "3"
+      }
+    ],
+    "form": "Champion",
+    "inherit_effect": "＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
+    "level": "4",
+    "play_cost": "5",
+    "rarity": "Uncommon",
+    "type": "Dinosaur",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e7c5aefbfff8f76edeb"
+    },
+    "card_number": "ST1-06",
+    "card_name": "コアドラモン",
+    "card_name_romaji": "Coredramon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-06.png",
+    "deck_number": "ST1",
+    "attribute": "Virus",
+    "card_colour": "Red",
+    "card_effect": "＜Blocker＞ (When an opponent's Digimon attacks, you may suspend this Digimon to force the opponent to attack it instead).[When Attacking] Lose 2 memory.",
+    "card_name_english": "Coredramon",
+    "card_type": "Digimon",
+    "digimon_power": "6000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Red",
+        "level": "3"
+      }
+    ],
+    "form": "Champion",
+    "inherit_effect": "",
+    "level": "4",
+    "play_cost": "5",
+    "rarity": "Common",
+    "type": "Dragon",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e705aefbfff8f76ede4"
+    },
+    "card_number": "ST1-03",
+    "card_name": "アグモン",
+    "card_name_romaji": "Agumon",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-03.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Agumon",
+    "card_type": "Digimon",
+    "digimon_power": "2000 DP",
+    "digivolution": [
+      {
+        "cost": "0",
+        "colour": "Red",
+        "level": "2"
+      }
+    ],
+    "form": "Rookie",
+    "inherit_effect": "[Your Turn] This Digimon gets +1000 DP.",
+    "level": "3",
+    "play_cost": "3",
+    "rarity": "Uncommon",
+    "type": "Reptile",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e735aefbfff8f76ede6"
+    },
+    "card_number": "ST1-08",
+    "card_name": "ガルダモン",
+    "card_name_romaji": "Garudamon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-08.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "[When Digivolving] 1 of your Digimon gets +3000 DP for the turn.",
+    "card_name_english": "Garudamon",
+    "card_type": "Digimon",
+    "digimon_power": "7000 DP",
+    "digivolution": [
+      {
+        "cost": "3",
+        "colour": "Red",
+        "level": "4"
+      }
+    ],
+    "form": "Ultimate",
+    "inherit_effect": "",
+    "level": "5",
+    "play_cost": "6",
+    "rarity": "Uncommon",
+    "type": "Birdkin",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e7a5aefbfff8f76edea"
+    },
+    "card_number": "ST1-05",
+    "card_name": "バードラモン",
+    "card_name_romaji": "Birdramon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-05.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Birdramon",
+    "card_type": "Digimon",
+    "digimon_power": "5000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Red",
+        "level": "3"
+      }
+    ],
+    "form": "Champion",
+    "inherit_effect": "",
+    "level": "4",
+    "play_cost": "4",
+    "rarity": "Common",
+    "type": "Giant Bird",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e6e5aefbfff8f76ede3"
+    },
+    "card_number": "ST1-01",
+    "card_name": "コロモン",
+    "card_name_romaji": "Koromon",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-01.png",
+    "deck_number": "ST1",
+    "attribute": "",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Koromon",
+    "card_type": "Digi-Egg",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "In-Training",
+    "inherit_effect": "[Your Turn] While this Digimon has 4 or more digivolution cards, it gets +1000 DP.",
+    "level": "2",
+    "play_cost": "",
+    "rarity": "Uncommon",
+    "type": "Lesser",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e745aefbfff8f76ede7"
+    },
+    "card_number": "ST1-16",
+    "card_name": "ガイアフォース",
+    "card_name_romaji": "Gaia Force",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-16.png",
+    "deck_number": "ST1",
+    "attribute": "",
+    "card_colour": "Red",
+    "card_effect": "[Main] Delete 1 of your opponent's Digimon.",
+    "card_name_english": "Gaia Force",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "8",
+    "rarity": "Uncommon",
+    "type": "",
+    "security_effect": "[Security] Activate this card's [Main] effect."
+  },
+  {
+    "_id": {
+      "$oid": "64410e7d5aefbfff8f76edec"
+    },
+    "card_number": "ST1-13",
+    "card_name": "シャドーウィング",
+    "card_name_romaji": "Shadow Wing",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-13.png",
+    "deck_number": "ST1",
+    "attribute": "",
+    "card_colour": "Red",
+    "card_effect": "[Main] 1 of your Digimon gets +3000 DP for the turn.",
+    "card_name_english": "Shadow Wing",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "1",
+    "rarity": "Common",
+    "type": "",
+    "security_effect": "[Security] All of your Digimon gain ＜Security Attack +1＞ (This Digimon checks 1 additional security card) until the end of your next turn."
+  },
+  {
+    "_id": {
+      "$oid": "64410e7f5aefbfff8f76edee"
+    },
+    "card_number": "ST1-15",
+    "card_name": "ギガデストロイヤー",
+    "card_name_romaji": "Giga Destroyer",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-15.png",
+    "deck_number": "ST1",
+    "attribute": "",
+    "card_colour": "Red",
+    "card_effect": "[Main] Delete up to 2 of your opponent's Digimon with 4000 DP or less.",
+    "card_name_english": "Giga Destroyer",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "6",
+    "rarity": "Common",
+    "type": "",
+    "security_effect": "[Security] Activate this card's [Main] effect."
+  },
+  {
+    "_id": {
+      "$oid": "64410e785aefbfff8f76ede9"
+    },
+    "card_number": "ST1-04",
+    "card_name": "ドラコモン",
+    "card_name_romaji": "Dracomon",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-04.png",
+    "deck_number": "ST1",
+    "attribute": "Data",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Dracomon",
+    "card_type": "Digimon",
+    "digimon_power": "4000 DP",
+    "digivolution": [
+      {
+        "cost": "0",
+        "colour": "Red",
+        "level": "2"
+      }
+    ],
+    "form": "Rookie",
+    "inherit_effect": "",
+    "level": "3",
+    "play_cost": "3",
+    "rarity": "Common",
+    "type": "Dragon",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e765aefbfff8f76ede8"
+    },
+    "card_number": "ST1-02",
+    "card_name": "ピヨモン",
+    "card_name_romaji": "Piyomon",
+    "card_price_jpy": "120",
+    "card_price_idr": "13326.94",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-02.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Biyomon",
+    "card_type": "Digimon",
+    "digimon_power": "3000 DP",
+    "digivolution": [
+      {
+        "cost": "0",
+        "colour": "Red",
+        "level": "2"
+      }
+    ],
+    "form": "Rookie",
+    "inherit_effect": "",
+    "level": "3",
+    "play_cost": "2",
+    "rarity": "Common",
+    "type": "Bird",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e7e5aefbfff8f76eded"
+    },
+    "card_number": "ST1-14",
+    "card_name": "スターライトエクスプロージョン",
+    "card_name_romaji": "Starlight Explosion",
+    "card_price_jpy": "30",
+    "card_price_idr": "3331.73",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-14.png",
+    "deck_number": "ST1",
+    "attribute": "",
+    "card_colour": "Red",
+    "card_effect": "[Main] All of your Security Digimon get +7000 DP until the end of your opponent's next turn.",
+    "card_name_english": "Starlight Explosion",
+    "card_type": "Option",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "2",
+    "rarity": "Common",
+    "type": "",
+    "security_effect": "[Security] All of your Security Digimon get +7000 DP for the turn."
+  },
+  {
+    "_id": {
+      "$oid": "64410e685aefbfff8f76eddf"
+    },
+    "card_number": "ST1-11",
+    "card_name": "ウォーグレイモン",
+    "card_name_romaji": "WarGreymon",
+    "card_price_jpy": "220",
+    "card_price_idr": "24432.72",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-11.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "[Your Turn] For every 2 digivolution cards this Digimon has, it gains ＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
+    "card_name_english": "WarGreymon",
+    "card_type": "Digimon",
+    "digimon_power": "12000 DP",
+    "digivolution": [
+      {
+        "cost": "4",
+        "colour": "Red",
+        "level": "5"
+      }
+    ],
+    "form": "Mega",
+    "inherit_effect": "",
+    "level": "6",
+    "play_cost": "12",
+    "rarity": "Super Rare",
+    "type": "Dragonkin",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e6b5aefbfff8f76ede1"
+    },
+    "card_number": "ST1-10",
+    "card_name": "ホウオウモン",
+    "card_name_romaji": "Hououmon",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-10.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "Phoenixmon",
+    "card_type": "Digimon",
+    "digimon_power": "12000 DP",
+    "digivolution": [
+      {
+        "cost": "2",
+        "colour": "Red",
+        "level": "5"
+      }
+    ],
+    "form": "Mega",
+    "inherit_effect": "",
+    "level": "6",
+    "play_cost": "10",
+    "rarity": "Rare",
+    "type": "Holy Beast",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e6a5aefbfff8f76ede0"
+    },
+    "card_number": "ST1-09",
+    "card_name": "メタルグレイモン",
+    "card_name_romaji": "MetalGreymon",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-09.png",
+    "deck_number": "ST1",
+    "attribute": "Vaccine",
+    "card_colour": "Red",
+    "card_effect": "",
+    "card_name_english": "MetalGreymon",
+    "card_type": "Digimon",
+    "digimon_power": "7000 DP",
+    "digivolution": [
+      {
+        "cost": "3",
+        "colour": "Red",
+        "level": "4"
+      }
+    ],
+    "form": "Ultimate",
+    "inherit_effect": "[Your Turn] When this Digimon is blocked, gain 3 memory.",
+    "level": "5",
+    "play_cost": "7",
+    "rarity": "Rare",
+    "type": "Cyborg",
+    "security_effect": ""
+  },
+  {
+    "_id": {
+      "$oid": "64410e6d5aefbfff8f76ede2"
+    },
+    "card_number": "ST1-12",
+    "card_name": "八神太一",
+    "card_name_romaji": "Yagami Taichi",
+    "card_price_jpy": "80",
+    "card_price_idr": "8884.62",
+    "card_image": "https://en.digimoncard.com/images/cardlist/card/ST1-12.png",
+    "deck_number": "ST1",
+    "attribute": "",
+    "card_colour": "Red",
+    "card_effect": "[Your Turn] All of your Digimon get +1000 DP.",
+    "card_name_english": "Tai Kamiya",
+    "card_type": "Tamer",
+    "digimon_power": "",
+    "digivolution": [],
+    "form": "",
+    "inherit_effect": "",
+    "level": "",
+    "play_cost": "2",
+    "rarity": "Rare",
+    "type": "",
+    "security_effect": "[Security] Play this card without paying its memory cost."
+  }
+]
