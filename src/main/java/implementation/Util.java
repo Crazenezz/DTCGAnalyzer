@@ -2,10 +2,11 @@ package implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import model.Card;
-import model.CardType;
+import model.card.Card;
+import model.card.CardType;
 import model.Phase;
 import model.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,12 +19,9 @@ import java.util.Objects;
 
 public class Util {
     public InputStream getFileFromResourceAsStream(String fileName) {
-
-        // The class loader that loaded the class
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
 
-        // the stream holding the file content
         if (inputStream == null) {
             throw new IllegalArgumentException("file not found! " + fileName);
         } else {
@@ -47,7 +45,7 @@ public class Util {
         }
     }
 
-    public Card getCardFromNumber(List<Card> list, String value) {
+    public Card getCardFromNumber(@NotNull List<Card> list, String value) {
         for (Object object : list.toArray()) {
 
             ObjectMapper mapper = new ObjectMapper();
@@ -61,7 +59,7 @@ public class Util {
         return null;
     }
 
-    public List<Card> getListCardFromLevel(List<Card> list, int level) {
+    public List<Card> getListCardFromLevel(@NotNull List<Card> list, int level) {
         List<Card> result = new ArrayList<>();
 
         for (Object object : list.toArray()) {
@@ -77,7 +75,8 @@ public class Util {
         return result;
     }
 
-    public int getCardFromType(List<Card> list, CardType type) {
+    public int getCardFromLevel(@NotNull List<Card> list, int level) {
+
         for (int i = 0; i < list.size(); i++) {
 
             Object object = list.get(i);
@@ -86,7 +85,22 @@ public class Util {
             mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             Card card = mapper.convertValue(object, Card.class);
 
-            if (card.translateType() == CardType.TAMER)
+            if (card.level == level)
+                return i;
+        }
+        return -1;
+    }
+
+    public int getCardFromType(@NotNull List<Card> list, CardType type) {
+        for (int i = 0; i < list.size(); i++) {
+
+            Object object = list.get(i);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            Card card = mapper.convertValue(object, Card.class);
+
+            if (card.translateType() == type)
                 return i;
         }
         return -1;
@@ -112,6 +126,8 @@ public class Util {
             System.out.println("Player: " + player.name + ", move " + card.name + " (" + card.number + ") to Battle Area!");
         else if (Objects.requireNonNull(phase) == Phase.MAIN_PLAY)
             System.out.println("Player: " + player.name + ", play a " + card.translateType() + " card, " + card.name + " (" + card.number + ") to Battle Area!");
+        else if (Objects.requireNonNull(phase) == Phase.MAIN_DIGIVOLVE)
+            System.out.println("Player: " + player.name + ", digivolve " + card.previousDigivolution.name + " (" + card.previousDigivolution.number + ") to " + card.name + " (" + card.number + ")" + " on Breeding Area!");
     }
 
     public void logger(Player player, int turn, Phase phase) {

@@ -1,25 +1,24 @@
 package implementation;
 
-import model.Digimon;
+import model.card.Card;
 import model.Player;
-import model.Tamer;
 
 import java.util.List;
 
 public class Keyword {
-    void blocker(Digimon thisDigimon, Digimon attackingDigimon) {
+    void blocker(Card thisDigimon, Card attackingDigimon) {
         if (thisDigimon.isSuspended()) {
             // Redirect the attack to this Digimon
         }
     }
 
-    void securityAttackPlusX(Digimon attackingDigimon, int X) {
+    void securityAttackPlusX(Card attackingDigimon, int X) {
         for (int i = 0; i < X; i++) {
             // Check and resolve each security card
         }
     }
 
-    void securityAttackMinusX(Digimon attackingDigimon, int X) {
+    void securityAttackMinusX(Card attackingDigimon, int X) {
         // Implementation of Security Attack -X
     }
 
@@ -29,8 +28,8 @@ public class Keyword {
         }
     }
 
-    void piercing(Digimon attackingDigimon, Digimon defendingDigimon) {
-        if (defendingDigimon.dp <= 0) {
+    void piercing(Card attackingDigimon, Card defendingDigimon) {
+        if (defendingDigimon.translateDP() <= 0) {
             // Check security if attacking Digimon survives
         }
     }
@@ -41,46 +40,46 @@ public class Keyword {
         }
     }
 
-    void jamming(Digimon attackingDigimon) {
+    void jamming(Card attackingDigimon) {
         // Can't be deleted in battles against Security Digimon
     }
 
-    void digisorptionX(Digimon digivolvingDigimon, Player player, int X) {
+    void digisorptionX(Card digivolvingDigimon, Player player, int X) {
         // Suspend 1 of player's Digimon to reduce digivolve cost by X
     }
 
-    void reboot(Digimon digimon) {
+    void reboot(Card digimon) {
         // Unsuspend this Digimon during opponent's unsuspend phase
     }
 
-    void deDigivolveX(Digimon targetDigimon, int X) {
+    void deDigivolveX(Card targetDigimon, int X) {
         for (int i = 0; i < X; i++) {
-            if (!targetDigimon.digivolutionCards.isEmpty()) {
-                targetDigimon.digivolutionCards.remove(targetDigimon.digivolutionCards.size() - 1);
+            if (!targetDigimon.digivolutions.isEmpty()) {
+                targetDigimon.digivolutions.remove(targetDigimon.digivolutions.size() - 1);
             }
         }
     }
 
-    void retaliation(Digimon thisDigimon, Digimon opposingDigimon) {
-        if (thisDigimon.dp <= 0) {
+    void retaliation(Card thisDigimon, Card opposingDigimon) {
+        if (thisDigimon.translateDP() <= 0) {
             // Delete the opposing Digimon
         }
     }
 
-    void digiBurstX(Digimon digimon, int X) {
+    void digiBurstX(Card digimon, int X) {
         for (int i = 0; i < X; i++) {
-            if (!digimon.digivolutionCards.isEmpty()) {
-                digimon.digivolutionCards.remove(digimon.digivolutionCards.size() - 1);
+            if (!digimon.digivolutions.isEmpty()) {
+                digimon.digivolutions.remove(digimon.digivolutions.size() - 1);
             }
         }
         // Activate the effect
     }
 
-    void rush(Digimon digimon) {
+    void rush(Card digimon) {
         // Can attack the turn it comes into play
     }
 
-    void blitz(Digimon digimon, int opponentMemory) {
+    void blitz(Card digimon, int opponentMemory) {
         if (opponentMemory >= 1) {
             // Can attack
         }
@@ -90,84 +89,84 @@ public class Keyword {
         // Trash this card in battle area to activate effect next turn
     }
 
-    void decoy(Digimon decoyDigimon, Digimon targetDigimon) {
+    void decoy(Card decoyDigimon, Card targetDigimon) {
         // Delete the decoy Digimon to prevent deletion of target Digimon
     }
 
-    void armorPurge(Digimon digimon) {
-        if (!digimon.digivolutionCards.isEmpty()) {
-            digimon.digivolutionCards.remove(digimon.digivolutionCards.size() - 1);
+    void armorPurge(Card digimon) {
+        if (!digimon.digivolutions.isEmpty()) {
+            digimon.digivolutions.remove(digimon.digivolutions.size() - 1);
             // Prevent deletion
         }
     }
 
-    void save(Digimon digimon, Tamer tamer) {
+    void save(Card digimon, Card tamer) {
         // Place this card under one of your tamers
     }
 
-    void materialSaveX(Digimon digimon, Tamer tamer, int X) {
+    void materialSaveX(Card digimon, Card tamer, int X) {
         for (int i = 0; i < X; i++) {
-            if (!digimon.digivolutionCards.isEmpty()) {
-                tamer.add(digimon.digivolutionCards.remove(digimon.digivolutionCards.size() - 1));
+            if (!digimon.digivolutions.isEmpty()) {
+                tamer.previousDigivolution = digimon.previousDigivolution;
             }
         }
     }
 
-    void evade(Digimon digimon) {
+    void evade(Card digimon) {
         // Suspend to prevent deletion
     }
 
-    void raid(Digimon attackingDigimon, Digimon highestDpDigimon) {
+    void raid(Card attackingDigimon, Card highestDpDigimon) {
         // Switch target to opponent's unsuspended Digimon with highest DP
     }
 
-    void alliance(Digimon attackingDigimon, Digimon supportingDigimon) {
-        attackingDigimon.dp += supportingDigimon.dp;
+    void alliance(Card attackingDigimon, Card supportingDigimon) {
+        attackingDigimon.addDP(supportingDigimon.translateDP());
         // Gain Security Attack +1
     }
 
-    void barrier(Digimon digimon, Player player) {
+    void barrier(Card digimon, Player player) {
         if (!player.securityStack.isEmpty()) {
             player.securityStack.pop();
             // Prevent deletion
         }
     }
 
-    void blastDigivolve(Digimon digimon) {
+    void blastDigivolve(Card digimon) {
         // Digivolve into specified card without paying cost
     }
 
-    void mindLink(Tamer tamer, Digimon digimon) {
+    void mindLink(Card tamer, Card digimon) {
         // Place tamer under one of your Digimon without a Tamer
     }
 
-    void fortitude(Digimon digimon) {
+    void fortitude(Card digimon) {
         // When deleted, play without cost
     }
 
-    void partition(Digimon digimon) {
+    void partition(Card digimon) {
         // When would leave battle area, play specified cards without cost
     }
 
-    void collision(Digimon attackingDigimon) {
+    void collision(Card attackingDigimon) {
         // Opponent's Digimon gain Blocker and must Block if possible
     }
 
-    void scapegoat(Digimon digimon, Digimon sacrificialDigimon) {
+    void scapegoat(Card digimon, Card sacrificialDigimon) {
         // Delete sacrificial Digimon to prevent deletion
     }
 
-    void blastDNADigivolve(Digimon digimon) {
+    void blastDNADigivolve(Card digimon) {
         // DNA digivolve using specified Digimon from hand
     }
 
-    void vortex(Digimon digimon) {
+    void vortex(Card digimon) {
         // At end of turn, may attack opponent's Digimon
     }
 
-    void overclock(Digimon digimon, List<Digimon> tokenOrPuppetDigimon) {
+    void overclock(Card digimon, List<Card> tokenOrPuppetDigimon) {
         // At end of turn, delete Token or [Puppet] trait Digimon to attack player without suspending
-        for (Digimon tokenOrPuppet : tokenOrPuppetDigimon) {
+        for (Card tokenOrPuppet : tokenOrPuppetDigimon) {
             if (tokenOrPuppet.getTrait().type.equals("Puppet")) {
                 // Delete the token or puppet Digimon
                 tokenOrPuppetDigimon.remove(tokenOrPuppet);
@@ -178,10 +177,10 @@ public class Keyword {
         }
     }
 
-    void iceArmor(Digimon attackingDigimon, Digimon defendingDigimon) {
+    void iceArmor(Card attackingDigimon, Card defendingDigimon) {
         // Compares digivolution cards instead of DP in battles
-        int attackingDigivolutionCount = attackingDigimon.digivolutionCards.size();
-        int defendingDigivolutionCount = defendingDigimon.digivolutionCards.size();
+        int attackingDigivolutionCount = attackingDigimon.digivolutions.size();
+        int defendingDigivolutionCount = defendingDigimon.digivolutions.size();
         if (attackingDigivolutionCount > defendingDigivolutionCount) {
             // Attacking Digimon wins the battle
         } else if (attackingDigivolutionCount < defendingDigivolutionCount) {

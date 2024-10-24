@@ -1,4 +1,4 @@
-package model;
+package model.card;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,6 +38,7 @@ public class Card {
     public List<Digivolution> digivolutions;
     @JsonProperty("level")
     public int level;
+    public int dp;
 
     // Not from DB
     @Getter
@@ -86,6 +87,10 @@ public class Card {
         } catch (NumberFormatException ex) {
             return 0;
         }
+    }
+
+    public int addDP(int dp) {
+        return this.dp += dp;
     }
 
     public Trait getTrait() {

@@ -1,8 +1,11 @@
 package implementation;
 
+import lombok.Getter;
+
+@Getter
 public class Memory {
+    // Get current memory value
     private int memory;
-    private final int maxMemory = 10;  // Max memory a player can have
 
     public Memory() {
         this.memory = 0;  // Game starts with 0 memory
@@ -13,6 +16,8 @@ public class Memory {
         this.memory += amount;
 
         // Ensure memory doesn't exceed limits
+        // Max memory a player can have
+        int maxMemory = 10;
         if (this.memory > maxMemory) {
             this.memory = maxMemory;
         } else if (this.memory < -maxMemory) {
@@ -20,24 +25,9 @@ public class Memory {
         }
     }
 
-    // Check if memory has crossed to the opponent's side
-    public boolean isOpponentTurn() {
-        return memory < 0;
-    }
-
-    // Get current memory value
-    public int getMemory() {
-        return memory;
-    }
-
     // Reset memory (at start of new turn)
     public void reset() {
         this.memory = 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Memory: " + memory;
     }
 }
 

@@ -1,6 +1,9 @@
 package implementation;
 
 import model.*;
+import model.card.Card;
+import model.card.CardType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
@@ -14,12 +17,14 @@ public class Mechanism {
     private boolean firstTurn = true;
     private int turn = 0;
     private final Util util;
+    private Memory memory;
 
     public Mechanism(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.currentPlayer = 0;
         util = new Util();
+        memory = new Memory();
     }
 
     public void drawCards(Player player, int numberOfCards) {
@@ -29,16 +34,6 @@ public class Mechanism {
         }
     }
 
-
-
-    /**
-     * Function to initialize the game, with following steps:
-     * 1. Shuffle the deck of both players
-     * 2. Shuffle the Digi-Egg deck of both players
-     * 3. Determine the starting player
-     * 4. Draw initial hands for both players
-     * 5. Place security stack for both players
-     */
     public void initializeGame() {
         shuffleDeck(player1.deck);
         shuffleDeck(player2.deck);
@@ -48,21 +43,11 @@ public class Mechanism {
         placeSecurityStack(player2);
     }
 
-    /**
-     * Function to shuffle the deck of a player, with following steps:
-     * 1. A deck contains 50 cards
-     * 2. Shuffle the deck
-     * <p>
-     * Additional notes, for Digi-Egg deck, it only contains 5 cards
-     */
-    public void shuffleDeck(Deck deck) {
+    public void shuffleDeck(@NotNull Deck deck) {
         Collections.shuffle(deck.digiEggDeck);
         Collections.shuffle(deck.mainDeck);
     }
 
-    /**
-     * Function to determine the starting player
-     */
     public void determineStartingPlayer() {
         currentPlayer = Math.random() < 0.5 ? 1 : 2;
         System.out.println("Player " + currentPlayer + " goes first.");
@@ -73,27 +58,18 @@ public class Mechanism {
         }
     }
 
-    /**
-     * Function to draw initial hands for both players
-     */
     public void drawInitialHands() {
         drawCards(player1, 5);
         drawCards(player2, 5);
+        System.out.print("\n");
     }
 
-    /**
-     * Function to place security stack for a player, with rules:
-     * 1. Initial security stack contains 5 cards
-     * 2. Draw the cards from the deck
-     * 3. First to draw from main deck is the last card in the security stack
-     */
     public void placeSecurityStack(Player player) {
         for (int i = 0; i < 5; i++) {
             player.securityStack.push(player.deck.draw());
         }
     }
 
-    // Main Game Flow
     public void mainGameFlow() {
         while (!endGame) {
             if (player1.isTurn)
@@ -103,22 +79,6 @@ public class Mechanism {
         }
     }
 
-    /**
-     * Execute player's turn, with following steps:
-     * 1. Start of Your Turn Phase
-     * 2. Unsuspend Phase
-     * 3. Draw Phase
-     * 4. Breeding Phase
-     * 5. Main Phase
-     * 6. End of Your Turn Phase
-     * <p>
-     * Additional notes:
-     * 1. Player's turn is determined by the boolean isTurn in Player class
-     * 2. Player's turn is switched at the end of the turn
-     * 3. Player's turn is checked at the beginning of the loop
-     * 4. Game ends when checkForGameEndConditions() returns true
-     * 5. On draw phase, player draws 1 card from the deck, if the deck is empty, player loses
-     */
     public void executePlayerTurn(Player player) {
         startTurn(player);
         unsuspendPhase(player);
@@ -214,22 +174,11 @@ public class Mechanism {
 
     }
 
-    private void unsuspendPhase(Player player) {
-        /**
-         * Implementation for Unsuspend Phase
-         *
-         * Unsuspend all suspended Digimon
-         */
+    private void unsuspendPhase(@NotNull Player player) {
         player.unsuspendAll();
     }
 
     private void drawPhase(Player player) {
-        /**
-         * Implementation for Draw Phase
-         *
-         * Draw 1 card from the deck
-         */
-
         if (player1.isTurn && player1.deck.isMainDeckEmpty()) {
             System.out.println("Player 1 has no more cards in deck. Player 2 wins!");
             endGame = true;
@@ -246,21 +195,12 @@ public class Mechanism {
             firstTurn = false;
     }
 
-    private void breedingPhase(Player player) {
-        /**
-         * Implementation for Breeding Phase
-         * <p>
-         * Breeding Phase is the phase where player can hatch the digi-egg
-         * <p>
-         * 1. Hatch a Digi-Egg
-         * 2. Move Digimon to Battle Area
-         * 3. Do Nothing (need to set priority, to trigger this event)
-         */
-
-        if (player.breedingArea.isEmpty()) {
+    private void breedingPhase(@NotNull Player player) {
+        if (player.breedingArea.isEmpty() && !player.deck.digiEggDeck.isEmpty()) {
             player.breedingArea.add(player.deck.digiEggDeck.removeLast());
             util.logger(player, player.breedingArea.getLast(), Phase.BREEDING);
-        } else if (player.breedingArea.getLast().level == 2 && player.breedingArea.getLast().nextDigivolution != null) {
+        } else if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level != 2 && player.breedingArea.getLast().previousDigivolution != null) {
+            // TODO: Need to set the priority, when to move and when to stay (Skip Breeding Phase)
             player.battleArea.add(player.breedingArea.removeLast());
             util.logger(player, player.battleArea.getLast(), Phase.BREEDING_MOVE);
         } else {
@@ -323,12 +263,14 @@ public class Mechanism {
          * 2. Check if there is a Tamer on hand, play it directly to battle area
          */
         if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 2) {
-            if (!util.getListCardFromLevel(player.hand, 3).isEmpty()) {
-                // TODO: Digivolve Digi-Egg to level 3
+            // TODO: Digivolve Digi-Egg to level 3, digivolution process
+            int index = util.getCardFromLevel(player.hand, 3);
+            if (index != -1) {
+                player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
             }
 
             // TODO: Play Tamer
-            int index = util.getCardFromType(player.hand, CardType.TAMER);
+            index = util.getCardFromType(player.hand, CardType.TAMER);
             if (index != -1) {
                 player.battleArea.add(player.hand.remove(index));
                 util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY);
@@ -361,12 +303,6 @@ public class Mechanism {
         }
     }
 
-    /**
-     * Function for implementation memory marker,
-     *
-     * Memory (メモリー Memorī?) is the resource system used by the Digimon Card Game. It is used to pay costs in order to play cards. It is also used in order to determine when a turn will swap over. Both players are meant to know what the memory gauge is currently.
-     *
-     */
     private void memoryMarker() {
         /**
          * Start of game, memory is set to 0
@@ -388,5 +324,14 @@ public class Mechanism {
 //            if (player2.memory < 0)
 //                switchTurn();
 //        }
+    }
+
+    public Card digivolve(@NotNull Player player, Card digivolution, @NotNull Card digimon) {
+        digimon.previousDigivolution = digivolution;
+
+        util.logger(player, digimon, Phase.MAIN_DIGIVOLVE);
+
+        drawCards(player, 1);
+        return digimon;
     }
 }
