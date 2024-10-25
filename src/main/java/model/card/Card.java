@@ -13,36 +13,41 @@ public class Card {
     public String number;
     @JsonProperty("card_name_english")
     public String name;
-    @JsonProperty("card_colour")
-    private String cardColour;
     @JsonProperty("card_effect")
     public String effect;
     @JsonProperty("inherit_effect")
     public String inheritEffect;
     @JsonProperty("security_effect")
     public String securityEffect;
+    @JsonProperty("play_cost")
+    public int playCost;
+    @JsonProperty("digivolution")
+    public List<Digivolution> digivolutions;
+    @JsonProperty("level")
+    public int level;
+    public int dp;
+    public Card previousDigivolution;
+    public Card nextDigivolution;
+    @JsonProperty("card_colour")
+    private String cardColour;
     @JsonProperty("card_type")
     private String cardType;
-
     @JsonProperty("attribute")
     private String attribute;
     @JsonProperty("form")
     private String form;
     @JsonProperty("type")
     private String type;
-    @JsonProperty("play_cost")
-    public int playCost;
     @JsonProperty("digimon_power")
     private String digimonPower;
-    @JsonProperty("digivolution")
-    public List<Digivolution> digivolutions;
-    @JsonProperty("level")
-    public int level;
-    public int dp;
-
     // Not from DB
     @Getter
     private boolean suspended;
+    // TODO: Not used for now
+    private Price price;
+    private String image;
+    private String deckNumber;
+    private String rarity;
 
     public void suspend() {
         suspended = true;
@@ -51,12 +56,6 @@ public class Card {
     public void unsuspend() {
         suspended = false;
     }
-
-    // TODO: Not used for now
-    private Price price;
-    private String image;
-    private String deckNumber;
-    private String rarity;
 
     public Colour translateColour() {
         return switch (cardColour) {
@@ -101,7 +100,4 @@ public class Card {
 
         return trait;
     }
-
-    public Card previousDigivolution;
-    public Card nextDigivolution;
 }

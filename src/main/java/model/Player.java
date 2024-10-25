@@ -1,6 +1,5 @@
 package model;
 
-import implementation.Memory;
 import implementation.Util;
 import model.card.Card;
 
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class Player {
+    private final Util util;
     public Deck deck;
     public List<Card> hand;
     public Stack<Card> securityStack;
@@ -17,7 +17,6 @@ public class Player {
     public List<Card> breedingArea;
     public boolean isTurn;
     public String name;
-    private final Util util;
 
     public Player(String name, Deck deck) {
         this.hand = new ArrayList<>();

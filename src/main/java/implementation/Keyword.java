@@ -1,7 +1,7 @@
 package implementation;
 
-import model.card.Card;
 import model.Player;
+import model.card.Card;
 
 import java.util.List;
 

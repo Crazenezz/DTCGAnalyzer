@@ -1,6 +1,8 @@
 package implementation;
 
-import model.*;
+import model.Deck;
+import model.Phase;
+import model.Player;
 import model.card.Card;
 import model.card.CardType;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +14,11 @@ import static java.lang.System.exit;
 public class Mechanism {
     private final Player player1;
     private final Player player2;
+    private final Util util;
     private int currentPlayer;
     private boolean endGame = false;
     private boolean firstTurn = true;
     private int turn = 0;
-    private final Util util;
     private Memory memory;
 
     public Mechanism(Player player1, Player player2) {
@@ -115,19 +117,18 @@ public class Mechanism {
 
     /**
      * We know as Rules Processing the process by which the rules remove elements that should not exist in the battle area:
-     *
+     * <p>
      * Send to the trash any Digimon with no DP in the Battle Area.
      * Send to the trash any Option cards in the Battle Area (that were not placed in the Battle Area by an effect specifying to place it in the Battle Area)
      * Deletes all Digimon with 0 DP.
      * Effects still follow the Triggered Effects procedure, Rules Processing is a step within that procedure:
-     *
+     * <p>
      * An effect has activated.
      * Effects met their Trigger Condition from the previous effect trigger.
      * Rules Processing removes elements that should not exist in the Battle Area.
      * Effects met their Trigger Condition from rules processing trigger.
      * Players then proceed with Triggered Effects procedures again.
      * This can continue indefinitely, until all effects have been triggered and activated.
-     *
      */
     private void rulesProcessing() {
         // Implementation for Rules Processing
@@ -136,33 +137,33 @@ public class Mechanism {
     /**
      * Pending Activation
      * Pending Activation (発揮待ち Hakki-machi?) is an official term used by the Detailed Rulebook that denotes when an effect is waiting for its player to activate it. An effect that has triggered enters "Pending Activation" status. The status is removed after an effect fails activation or is successfully activated.
-     *
+     * <p>
      * Priority
      * This is an unofficial term, and used only to illustrate the order of effects in this page.
-     *
+     * <p>
      * An effect that has met its trigger conditions becomes pending activation with a priority to effects triggered before it. Any effects triggered by the same action or effect are considered to have triggered at the same time and as such have the same priority level assigned. In this page, effects will be assigned a priority number.
-     *
+     * <p>
      * If a player has an effect with a higher priority, they must activate that effect first. If effects have the same priority, the turn player will activate first, before the opponent activates an effect. If a player has multiple effects with the same priority, the player chooses any of those effects to activate first. The order of effects with the same priority are not determined when they are triggered, and only when a player decides which effect to activate.
-     *
+     * <p>
      * Procedure
      * 1. All effects that met their trigger condition enter pending activation state with the same priority.
      * 2. Repeat the following until all effects are no longer "Pending Activation".
-     *  2.1. The turn player chooses an effect with the highest priority. If the opposing turn player has an effect with a higher priority, the opponent chooses instead.
-     *      2.1.1. If the effect is optional, the player may choose to skip the following steps (2.1.2 to 2.1.5) and the effect is no longer "Pending Activation".
-     *      2.1.2. Check if the effect meets its activation conditions, if it fails to meet its activation conditions skip the following steps (2.1.3 to 2.1.5) and the effect is no longer marked "Pending Activation".
-     *      2.1.3. Effect is activated, and if it has [Once Per Turn] it cannot be activated again during the rest of this turn regardless of whether the actions in Step 5 are carried out or not.
-     *      2.1.4. Apply the actions listed in the effect.
-     *          2.1.4.1. If an Option was used by the card effect, instantly apply the Option's effect.
-     *          2.1.4.2. If an effect is activated by the card effect, instantly apply the actions in that effect.
-     *          2.1.4.3. If a Digimon leaves the Battle Area, instantly place its digivolution cards in trash.
-     *  2.2. All effects that met their trigger conditions in Step 2.1. are now triggered and become "pending activation" with a priority +1 to the current highest priority.
-     *  2.3. Perform Rules Processing:
-     *      2.3.1. Do the following simultaneously:
-     *          2.3.1.1. Send to the trash any Level 2 Digi-Eggs on the field.
-     *          2.3.1.2. Send to the trash any Option cards in the Battle Area (that were not placed in the Battle Area by an effect specifying to place it in the Battle Area)
-     *          2.3.1.3. Delete all Digimon with 0 DP on the field.
-     *      2.3.2. All effects that met their trigger conditions in Step 3.1. are now triggered and become "pending activation" with a priority +1 to the current highest priority.
-     *          2.3.2.1. This includes effects triggered in Step 2.2., if effects triggered at both Step 2.2, and Step 2.3.2. Effects triggered at Step 2.3.2. will have a higher priority than those triggered in Step 2.2.
+     * 2.1. The turn player chooses an effect with the highest priority. If the opposing turn player has an effect with a higher priority, the opponent chooses instead.
+     * 2.1.1. If the effect is optional, the player may choose to skip the following steps (2.1.2 to 2.1.5) and the effect is no longer "Pending Activation".
+     * 2.1.2. Check if the effect meets its activation conditions, if it fails to meet its activation conditions skip the following steps (2.1.3 to 2.1.5) and the effect is no longer marked "Pending Activation".
+     * 2.1.3. Effect is activated, and if it has [Once Per Turn] it cannot be activated again during the rest of this turn regardless of whether the actions in Step 5 are carried out or not.
+     * 2.1.4. Apply the actions listed in the effect.
+     * 2.1.4.1. If an Option was used by the card effect, instantly apply the Option's effect.
+     * 2.1.4.2. If an effect is activated by the card effect, instantly apply the actions in that effect.
+     * 2.1.4.3. If a Digimon leaves the Battle Area, instantly place its digivolution cards in trash.
+     * 2.2. All effects that met their trigger conditions in Step 2.1. are now triggered and become "pending activation" with a priority +1 to the current highest priority.
+     * 2.3. Perform Rules Processing:
+     * 2.3.1. Do the following simultaneously:
+     * 2.3.1.1. Send to the trash any Level 2 Digi-Eggs on the field.
+     * 2.3.1.2. Send to the trash any Option cards in the Battle Area (that were not placed in the Battle Area by an effect specifying to place it in the Battle Area)
+     * 2.3.1.3. Delete all Digimon with 0 DP on the field.
+     * 2.3.2. All effects that met their trigger conditions in Step 3.1. are now triggered and become "pending activation" with a priority +1 to the current highest priority.
+     * 2.3.2.1. This includes effects triggered in Step 2.2., if effects triggered at both Step 2.2, and Step 2.3.2. Effects triggered at Step 2.3.2. will have a higher priority than those triggered in Step 2.2.
      * 3. Repeat Step 2 until there are no more effects marked as "Pending Activation".
      */
     private void pendingActivation() {
@@ -255,6 +256,7 @@ public class Mechanism {
          */
 
         util.logger(player, Phase.START_MAIN);
+        util.logger(player, memory.getMemory());
 
         /** TODO:
          * Search from hand for specific case
@@ -262,18 +264,70 @@ public class Mechanism {
          * 1. Check if breeding area is level 2, and check if there is level 3 on hand, digivolve on breeding area
          * 2. Check if there is a Tamer on hand, play it directly to battle area
          */
-        if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 2) {
-            // TODO: Digivolve Digi-Egg to level 3, digivolution process
-            int index = util.getCardFromLevel(player.hand, 3);
-            if (index != -1) {
-                player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
+        int index = -1;
+        while ((currentPlayer == 1 && memory.getMemory() < 1) || (currentPlayer == 2 && memory.getMemory() > -1)) {
+            if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 2) {
+                // TODO: Need to check and analyze which one (if more than one) as priority for digivolve
+                index = util.getCardFromLevel(player.hand, 3);
+                if (index != -1) {
+                    player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
+
+                    // TODO: Pay the memory
+                    int memoryCost = player.breedingArea.getLast().digivolutions.getFirst().cost;
+                    if (currentPlayer == 1)
+                        memory.adjustMemory(memoryCost);
+                    else
+                        memory.adjustMemory(-memoryCost);
+                    continue;
+                }
             }
 
-            // TODO: Play Tamer
             index = util.getCardFromType(player.hand, CardType.TAMER);
             if (index != -1) {
                 player.battleArea.add(player.hand.remove(index));
-                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY);
+                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
+
+                // TODO: Need to trigger [On Play] Effect
+
+                int memoryCost = player.battleArea.getLast().playCost;
+                if (currentPlayer == 1)
+                    memory.adjustMemory(memoryCost);
+                else
+                    memory.adjustMemory(-memoryCost);
+
+                continue;
+            }
+
+            index = util.getCardWithLowestLevelCost(player.hand, CardType.DIGIMON);
+            if (index != -1) {
+                player.battleArea.add(player.hand.remove(index));
+                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
+
+                // TODO: Need to trigger [On Play] Effect
+
+                int memoryCost = player.battleArea.getLast().playCost;
+                if (currentPlayer == 1)
+                    memory.adjustMemory(memoryCost);
+                else
+                    memory.adjustMemory(-memoryCost);
+
+                continue;
+            }
+
+            index = util.getCardWithLowestLevelCost(player.hand, CardType.OPTION);
+            if (index != -1) {
+                player.battleArea.add(player.hand.remove(index));
+                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
+
+                // TODO: Need to trigger [On Play] Effect
+
+                int memoryCost = player.battleArea.getLast().playCost;
+                if (currentPlayer == 1)
+                    memory.adjustMemory(memoryCost);
+                else
+                    memory.adjustMemory(-memoryCost);
+
+                continue;
             }
         }
     }
@@ -297,9 +351,13 @@ public class Mechanism {
         if (player1.isTurn) {
             player1.isTurn = false;
             player2.isTurn = true;
+
+            currentPlayer = 2;
         } else {
             player1.isTurn = true;
             player2.isTurn = false;
+
+            currentPlayer = 1;
         }
     }
 

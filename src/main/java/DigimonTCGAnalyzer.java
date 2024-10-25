@@ -2,7 +2,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import implementation.Mechanism;
 import implementation.Util;
-import model.*;
+import model.Deck;
+import model.Player;
 
 public class DigimonTCGAnalyzer {
 

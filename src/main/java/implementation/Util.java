@@ -2,10 +2,10 @@ package implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import model.card.Card;
-import model.card.CardType;
 import model.Phase;
 import model.Player;
+import model.card.Card;
+import model.card.CardType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -106,6 +106,26 @@ public class Util {
         return -1;
     }
 
+    public int getCardWithLowestLevelCost(@NotNull List<Card> list, CardType type) {
+        int index = -1;
+        int level = 7;
+        int playCost = 21;
+
+        for (int i = 0; i < list.size(); i++) {
+            Object object = list.get(i);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            Card card = mapper.convertValue(object, Card.class);
+
+            if (card.translateType() == CardType.DIGIMON && level > card.level && playCost > card.playCost)
+                index = i;
+            else if (card.translateType() == CardType.OPTION && playCost > card.playCost)
+                index = i;
+        }
+        return index;
+    }
+
     public void logger(Player player, Phase phase) {
         if (Objects.requireNonNull(phase) == Phase.BREEDING)
             System.out.println("Player: " + player.name + ", Skip Breeding Phase!");
@@ -116,6 +136,10 @@ public class Util {
     }
 
     public void logger(Player player, Card card, Phase phase) {
+        logger(player, card, phase, "Breeding Area!");
+    }
+
+    public void logger(Player player, Card card, Phase phase, String area) {
         if (Objects.requireNonNull(phase) == Phase.DRAW)
             System.out.println("Player: " + player.name + ", draw " + card.translateType() + " card, " + card.name + " (" + card.number + ") to hand!");
         else if (Objects.requireNonNull(phase) == Phase.UNSUSPEND)
@@ -125,9 +149,9 @@ public class Util {
         else if (Objects.requireNonNull(phase) == Phase.BREEDING_MOVE)
             System.out.println("Player: " + player.name + ", move " + card.name + " (" + card.number + ") to Battle Area!");
         else if (Objects.requireNonNull(phase) == Phase.MAIN_PLAY)
-            System.out.println("Player: " + player.name + ", play a " + card.translateType() + " card, " + card.name + " (" + card.number + ") to Battle Area!");
+            System.out.println("Player: " + player.name + ", play a " + card.translateType() + " card, " + card.name + " (" + card.number + ") pay " + card.playCost + " memory, to Battle Area!");
         else if (Objects.requireNonNull(phase) == Phase.MAIN_DIGIVOLVE)
-            System.out.println("Player: " + player.name + ", digivolve " + card.previousDigivolution.name + " (" + card.previousDigivolution.number + ") to " + card.name + " (" + card.number + ")" + " on Breeding Area!");
+            System.out.println("Player: " + player.name + ", digivolve " + card.previousDigivolution.name + " (" + card.previousDigivolution.number + ") to " + card.name + " (" + card.number + ") pay " + card.digivolutions.getFirst().cost + " memory, on " + area);
     }
 
     public void logger(Player player, int turn, Phase phase) {
@@ -135,5 +159,9 @@ public class Util {
             System.out.println("Start turn: " + turn + ", by Player: " + player.name);
         else
             System.out.println("End turn: " + turn + ", by Player: " + player.name + "\n");
+    }
+
+    public void logger(@NotNull Player player, int memory) {
+        System.out.println("Player: " + player.name + ", current memory: " + memory);
     }
 }
