@@ -1,6 +1,7 @@
 package implementation;
 
 import model.Deck;
+import model.DigivolutionObject;
 import model.Phase;
 import model.Player;
 import model.card.Card;
@@ -8,6 +9,7 @@ import model.card.CardType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static java.lang.System.exit;
 
@@ -103,6 +105,7 @@ public class Mechanism {
          */
         turn++;
         util.logger(player, turn, Phase.START_TURN);
+        util.logger(player, memory.getMemory());
 
 
         // Check if any card on battle area, with card_effect [Start of Your Turn], trigger the effect
@@ -265,7 +268,16 @@ public class Mechanism {
          * 2. Check if there is a Tamer on hand, play it directly to battle area
          */
         int index = -1;
+        int memoryCost = 0;
         while ((currentPlayer == 1 && memory.getMemory() < 1) || (currentPlayer == 2 && memory.getMemory() > -1)) {
+
+            // TODO: Skip the turn, no card can be play or digivolve
+            if (player.hand.isEmpty()) {
+                memory.skipTurn(currentPlayer);
+
+                util.logger(player, Phase.SKIP_MAIN);
+            }
+
             if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 2) {
                 // TODO: Need to check and analyze which one (if more than one) as priority for digivolve
                 index = util.getCardFromLevel(player.hand, 3);
@@ -273,7 +285,21 @@ public class Mechanism {
                     player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
 
                     // TODO: Pay the memory
-                    int memoryCost = player.breedingArea.getLast().digivolutions.getFirst().cost;
+                    memoryCost = player.breedingArea.getLast().digivolutions.getFirst().cost;
+                    if (currentPlayer == 1)
+                        memory.adjustMemory(memoryCost);
+                    else
+                        memory.adjustMemory(-memoryCost);
+                    continue;
+                }
+            } else if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 3) {
+                // TODO: Need to check and analyze which one (if more than one) as priority for digivolve
+                index = util.getCardFromLevel(player.hand, 4);
+                if (index != -1) {
+                    player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
+
+                    // TODO: Pay the memory
+                    memoryCost = player.breedingArea.getLast().digivolutions.getFirst().cost;
                     if (currentPlayer == 1)
                         memory.adjustMemory(memoryCost);
                     else
@@ -282,6 +308,30 @@ public class Mechanism {
                 }
             }
 
+            // TODO: Digivolve on Battle Area
+            DigivolutionObject digivolutionObject = new DigivolutionObject();
+            try {
+                digivolutionObject = util.digivolveTo(player.hand, player.battleArea);
+
+                if (digivolutionObject.indexTo != -1 && digivolutionObject.indexFrom != -1 && player.battleArea.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON && player.hand.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON) {
+                    player.battleArea.set(digivolutionObject.indexTo, digivolve(player, player.battleArea.get(digivolutionObject.indexFrom), player.hand.remove(digivolutionObject.indexFrom)));
+                    // TODO: Pay the memory
+                    memoryCost = player.battleArea.get(digivolutionObject.indexTo).digivolutions.getFirst().cost;
+                    if (currentPlayer == 1)
+                        memory.adjustMemory(memoryCost);
+                    else
+                        memory.adjustMemory(-memoryCost);
+
+                    continue;
+                }
+            } catch (IndexOutOfBoundsException ex) {
+                memory.skipTurn(currentPlayer);
+
+                util.logger(player, Phase.SKIP_MAIN);
+                continue;
+            }
+
+
             index = util.getCardFromType(player.hand, CardType.TAMER);
             if (index != -1) {
                 player.battleArea.add(player.hand.remove(index));
@@ -289,7 +339,7 @@ public class Mechanism {
 
                 // TODO: Need to trigger [On Play] Effect
 
-                int memoryCost = player.battleArea.getLast().playCost;
+                memoryCost = player.battleArea.getLast().playCost;
                 if (currentPlayer == 1)
                     memory.adjustMemory(memoryCost);
                 else
@@ -305,7 +355,7 @@ public class Mechanism {
 
                 // TODO: Need to trigger [On Play] Effect
 
-                int memoryCost = player.battleArea.getLast().playCost;
+                memoryCost = player.battleArea.getLast().playCost;
                 if (currentPlayer == 1)
                     memory.adjustMemory(memoryCost);
                 else
@@ -321,7 +371,7 @@ public class Mechanism {
 
                 // TODO: Need to trigger [On Play] Effect
 
-                int memoryCost = player.battleArea.getLast().playCost;
+                memoryCost = player.battleArea.getLast().playCost;
                 if (currentPlayer == 1)
                     memory.adjustMemory(memoryCost);
                 else
@@ -329,6 +379,9 @@ public class Mechanism {
 
                 continue;
             }
+
+            // TODO: Attack
+
         }
     }
 

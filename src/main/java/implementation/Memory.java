@@ -18,8 +18,11 @@ public class Memory {
         this.memory += amount;
     }
 
-    public void skipTurn() {
-        this.memory = 3;
+    public void skipTurn(int currentPlayer) {
+        if (currentPlayer == 1)
+            this.memory = 3;
+        else
+            this.memory = -3;
     }
 }
 

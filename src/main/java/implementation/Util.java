@@ -2,6 +2,7 @@ package implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import model.DigivolutionObject;
 import model.Phase;
 import model.Player;
 import model.card.Card;
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Util {
     public InputStream getFileFromResourceAsStream(String fileName) {
@@ -164,4 +166,39 @@ public class Util {
     public void logger(@NotNull Player player, int memory) {
         System.out.println("Player: " + player.name + ", current memory: " + memory);
     }
+
+    public List<Card> getDistinctObject(@NotNull List<Card> list) {
+        return list.stream().distinct().collect(Collectors.toList());
+    }
+
+    public DigivolutionObject digivolveTo(List<Card> hand, @NotNull List<Card> area) {
+        DigivolutionObject digivolutionObject = new DigivolutionObject();
+
+        for (int indexFrom = 0; indexFrom < area.size(); indexFrom++) {
+            Object object = area.get(indexFrom);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            Card cardOnBA = mapper.convertValue(object, Card.class);
+
+            if (cardOnBA.translateType() == CardType.DIGIMON && cardOnBA.level < 7) {
+                for (int indexTo = 0; indexTo < hand.size(); indexTo++) {
+                    object = area.get(indexTo);
+                    Card cardOnHand = mapper.convertValue(object, Card.class);
+
+                    if (cardOnHand.translateType() == CardType.DIGIMON && cardOnHand.level == (cardOnBA.level + 1)) {
+                        digivolutionObject.indexFrom = indexFrom;
+                        digivolutionObject.indexTo = indexTo;
+
+                        return digivolutionObject;
+                    }
+                }
+            }
+        }
+
+
+
+        return digivolutionObject;
+    }
+
 }
