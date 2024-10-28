@@ -1,15 +1,19 @@
 package implementation;
 
+import implementation.util.Logger;
+import implementation.util.Util;
 import model.Deck;
 import model.DigivolutionObject;
 import model.Phase;
 import model.Player;
 import model.card.Card;
 import model.card.CardType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.EmptyStackException;
+import java.util.List;
 
 import static java.lang.System.exit;
 
@@ -17,6 +21,7 @@ public class Mechanism {
     private final Player player1;
     private final Player player2;
     private final Util util;
+    private final Logger log;
     private int currentPlayer;
     private boolean endGame = false;
     private boolean firstTurn = true;
@@ -28,13 +33,14 @@ public class Mechanism {
         this.player2 = player2;
         this.currentPlayer = 0;
         util = new Util();
+        log = new Logger();
         memory = new Memory();
     }
 
     public void drawCards(Player player, int numberOfCards) {
         for (int i = 0; i < numberOfCards; i++) {
             player.hand.add(player.deck.draw());
-            util.logger(player, player.hand.getLast(), Phase.DRAW);
+            log.logger(player, player.hand.getLast(), Phase.DRAW);
         }
     }
 
@@ -104,8 +110,9 @@ public class Mechanism {
          * 5. After that, proceed to the next phase, unsuspend phase
          */
         turn++;
-        util.logger(player, turn, Phase.START_TURN);
-        util.logger(player, memory.getMemory());
+        log.logger(player, turn, Phase.START_TURN);
+        log.logger(player, memory.getMemory());
+        log.logger(player.hand);
 
 
         // Check if any card on battle area, with card_effect [Start of Your Turn], trigger the effect
@@ -202,132 +209,123 @@ public class Mechanism {
     private void breedingPhase(@NotNull Player player) {
         if (player.breedingArea.isEmpty() && !player.deck.digiEggDeck.isEmpty()) {
             player.breedingArea.add(player.deck.digiEggDeck.removeLast());
-            util.logger(player, player.breedingArea.getLast(), Phase.BREEDING);
+            log.logger(player, player.breedingArea.getLast(), Phase.BREEDING);
         } else if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level != 2 && player.breedingArea.getLast().previousDigivolution != null) {
             // TODO: Need to set the priority, when to move and when to stay (Skip Breeding Phase)
             player.battleArea.add(player.breedingArea.removeLast());
-            util.logger(player, player.battleArea.getLast(), Phase.BREEDING_MOVE);
+            log.logger(player, player.battleArea.getLast(), Phase.BREEDING_MOVE);
         } else {
-            util.logger(player, Phase.BREEDING);
+            log.logger(player, Phase.BREEDING);
         }
     }
 
+    /**
+     * Implementation List of Action based on General Rules, such as:
+     * 1. Skip Turn
+     * 2. Digivolve on Breeding Area
+     * 3. Digivolve on Battle Area
+     * 4. Play Tamer
+     * 5. Play Option
+     * 6. Play Digimon
+     * 7. Attacking with Digimon (on Battle Area) to Security
+     * <p>
+     * Priority based on first action that match with condition
+     * @param player Object Player, to get attributes such as hand, security, deck, area (breeding/battle/trash)
+     */
     private void mainPhase(Player player) {
-        /**
-         * Implementation for Main Phase
-         *
-         * A. Playing Digimon
-         * Players can play Digimon cards from their hand to their battle area.
-         * First, place the Digimon card you want to play in the battle area unsuspended.
-         * Next, pay the play cost of that Digimon card. The Digimon is now played in the battle area.
-         * Digimon can't attack on the turn they were played. There's no limit to how many Digimon can be placed in the battle area.
-         *
-         * B. Digivolving
-         * Players can digivolve the Digimon in their battle area or breeding area.
-         * Check the digivolution conditions listed on a card in your hand. If you have a Digimon in play that matches the required colour and level, it can digivolve into the Digimon card you have in your hand. If a card has multiple digivolution conditions, a Digimon must only satisfy one of those conditions to digivolve into it.
-         * Place the digivolved Digimon card from your hand on top of the card that meets its digivolution conditions. Stack them so that any inherited effects of the card below it are visible. Next, pay the digivolve cost written on the card. Once digivolution is complete, draw 1 card as a digivolution bonus.
-         *  - The cards below a digivolved Digimon become digivolution cards.
-         *  - The inherited effects of those cards can be used after digivolving with them.
-         *  - The digivolution card and digivolved Digimon are treated as a single Digimon.
-         *  - If that Digimon is deleted, all of its digivolution cards are placed in the trash.
-         *
-         *  C. Playing Tamers
-         * Players can play Tamer cards from their hand to their battle area. There is no limit to how many Tamers can be placed in the battle area. Tamers can't attack or block.
-         *  - Place the Tamer card you want to play in the battle area unsuspended.
-         *  - Pay the play cost of the Tamer card. The Tamer is now played to the battle area.
-         *
-         *  D. Using Option Cards
-         * Players can activate the main effect of Option cards from their hand. To use an Option card, you must have at least one Digimon or Tamer of the same colour as the Option card in your battle area or breeding area.
-         *
-         * E. Attacking
-         * Digimon in the battle area can make attacks.
-         *  - Suspend an unsuspended Digimon you want to attack with and declare your attack.
-         *  - Choose the target of your attack. You can either target one of your opponent's suspended Digimon in the battle area, or the opposing player.
-         *  - Any [When Attacking] and "when suspended" effects are activated at this point.
-         *
-         * Additional Notes on Main Phase:
-         * Attacking the Opponent's Digimon
-         * - The attacking Digimon and the target Digimon battle each other.
-         * - The winner of the battle is determined by which Digimon has the higher DP.
-         * - The defeated Digimon is deleted and gets placed in its owner's trash.
-         * - If both Digimon have equal DP, the battle is a draw, and both Digimon are deleted.
-         *
-         * Attacking the Opposing Player
-         * - If the opposing player has at least 1 security card in their security stack, flip over their top security card. Flipping a security card face up during an attack is called checking.
-         * - If the checked card has a security effect, that effect is activated.
-         * - You don't need to pay any memory cost to activate a security effect, and security effects on Option cards ignore normal colour restrictions for Option cards. Proceed after the security effect has been resolved, or if the card has no security effect. Cards are resolved as follows, depending on what type was turned over.
-         */
+        log.logger(player, Phase.START_MAIN);
+        log.logger(player, memory.getMemory());
 
-        util.logger(player, Phase.START_MAIN);
-        util.logger(player, memory.getMemory());
+        // TODO: Need to implementation check from hand to do efficient action
 
-        /** TODO:
-         * Search from hand for specific case
-         *
-         * 1. Check if breeding area is level 2, and check if there is level 3 on hand, digivolve on breeding area
-         * 2. Check if there is a Tamer on hand, play it directly to battle area
-         */
-        int index = -1;
-        int memoryCost = 0;
+        int index;
         while ((currentPlayer == 1 && memory.getMemory() < 1) || (currentPlayer == 2 && memory.getMemory() > -1)) {
-
-            // TODO: Skip the turn, no card can be play or digivolve
             if (player.hand.isEmpty()) {
                 memory.skipTurn(currentPlayer);
 
-                util.logger(player, Phase.SKIP_MAIN);
+                log.logger(player, Phase.SKIP_MAIN);
+            }
+
+            // TODO: Move to first priority, if there are any Digimon on Battle Area, next need to implement Summoning Sickness
+            index = util.getAttackerDigimon(player.battleArea);
+            if (index != -1) {
+                // TODO: Implementation Digimon Attack to Security Stack (compare DP if both DIGIMON for the card type)
+                Card attackerDigimon = player.battleArea.get(index);
+                attackerDigimon.suspend();
+                int attackerDP = attackerDigimon.translateDP();
+
+                // TODO: Only 1 check to Security Stack
+                Player opponent;
+                if (currentPlayer == 1)
+                    opponent = player2;
+                else
+                    opponent = player1;
+
+                try {
+                    Card securityCard = opponent.securityStack.pop();
+                    log.logger(player, opponent, attackerDigimon, securityCard, Phase.MAIN_ATTACKING);
+
+                    if (securityCard.translateType() == CardType.DIGIMON) {
+                        if (attackerDP > securityCard.translateDP()) {
+                            opponent.trash.add(securityCard);
+                            log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Trash!");
+                        } else {
+                            opponent.trash.add(securityCard);
+                            log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Trash!");
+
+                            // TODO: Need to breakdown the each of digivolution card to trash
+                            fromBattleAreaToTrash(player, player.battleArea.remove(index));
+                        }
+                    } else if (securityCard.translateType() == CardType.TAMER) {
+                        // TODO: Implement [Security Effect] of a Tamer Card (assume, Play Free to Battle Area)
+                        opponent.battleArea.add(securityCard);
+                        log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Battle Area!");
+                    } else {
+                        // TODO: Implement [Security Effect] of an Option Card
+                    }
+
+
+                    // TODO: Need to trigger [When Attacking] Effect
+                } catch (EmptyStackException ex) {
+                    System.out.println(opponent.name + " has no more Security Cards in Stack. Direct Attack, " + player.name + " wins!");
+                    endGame = true;
+                    exit(0);
+                }
             }
 
             if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 2) {
-                // TODO: Need to check and analyze which one (if more than one) as priority for digivolve
                 index = util.getCardFromLevel(player.hand, 3);
                 if (index != -1) {
                     player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
 
-                    // TODO: Pay the memory
-                    memoryCost = player.breedingArea.getLast().digivolutions.getFirst().cost;
-                    if (currentPlayer == 1)
-                        memory.adjustMemory(memoryCost);
-                    else
-                        memory.adjustMemory(-memoryCost);
+                    memoryMarker(player.breedingArea.getLast().digivolutions.getFirst().cost);
                     continue;
                 }
             } else if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 3) {
-                // TODO: Need to check and analyze which one (if more than one) as priority for digivolve
                 index = util.getCardFromLevel(player.hand, 4);
                 if (index != -1) {
                     player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
 
-                    // TODO: Pay the memory
-                    memoryCost = player.breedingArea.getLast().digivolutions.getFirst().cost;
-                    if (currentPlayer == 1)
-                        memory.adjustMemory(memoryCost);
-                    else
-                        memory.adjustMemory(-memoryCost);
+                    memoryMarker(player.breedingArea.getLast().digivolutions.getFirst().cost);
                     continue;
                 }
             }
 
-            // TODO: Digivolve on Battle Area
-            DigivolutionObject digivolutionObject = new DigivolutionObject();
+            DigivolutionObject digivolutionObject;
             try {
+                // TODO: Need to check what makes IndexOutofBoundsException & IllegalArgumentException
                 digivolutionObject = util.digivolveTo(player.hand, player.battleArea);
 
                 if (digivolutionObject.indexTo != -1 && digivolutionObject.indexFrom != -1 && player.battleArea.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON && player.hand.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON) {
                     player.battleArea.set(digivolutionObject.indexTo, digivolve(player, player.battleArea.get(digivolutionObject.indexFrom), player.hand.remove(digivolutionObject.indexFrom)));
-                    // TODO: Pay the memory
-                    memoryCost = player.battleArea.get(digivolutionObject.indexTo).digivolutions.getFirst().cost;
-                    if (currentPlayer == 1)
-                        memory.adjustMemory(memoryCost);
-                    else
-                        memory.adjustMemory(-memoryCost);
 
+                    memoryMarker(player.battleArea.get(digivolutionObject.indexTo).digivolutions.getFirst().cost);
                     continue;
                 }
             } catch (IndexOutOfBoundsException ex) {
                 memory.skipTurn(currentPlayer);
 
-                util.logger(player, Phase.SKIP_MAIN);
+                log.logger(player, Phase.SKIP_MAIN);
                 continue;
             }
 
@@ -335,15 +333,11 @@ public class Mechanism {
             index = util.getCardFromType(player.hand, CardType.TAMER);
             if (index != -1) {
                 player.battleArea.add(player.hand.remove(index));
-                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
+                log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
 
                 // TODO: Need to trigger [On Play] Effect
 
-                memoryCost = player.battleArea.getLast().playCost;
-                if (currentPlayer == 1)
-                    memory.adjustMemory(memoryCost);
-                else
-                    memory.adjustMemory(-memoryCost);
+                memoryMarker(player.battleArea.getLast().playCost);
 
                 continue;
             }
@@ -351,15 +345,11 @@ public class Mechanism {
             index = util.getCardWithLowestLevelCost(player.hand, CardType.DIGIMON);
             if (index != -1) {
                 player.battleArea.add(player.hand.remove(index));
-                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
+                log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
 
                 // TODO: Need to trigger [On Play] Effect
 
-                memoryCost = player.battleArea.getLast().playCost;
-                if (currentPlayer == 1)
-                    memory.adjustMemory(memoryCost);
-                else
-                    memory.adjustMemory(-memoryCost);
+                memoryMarker(player.battleArea.getLast().playCost);
 
                 continue;
             }
@@ -367,21 +357,14 @@ public class Mechanism {
             index = util.getCardWithLowestLevelCost(player.hand, CardType.OPTION);
             if (index != -1) {
                 player.battleArea.add(player.hand.remove(index));
-                util.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
+                log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
 
                 // TODO: Need to trigger [On Play] Effect
 
-                memoryCost = player.battleArea.getLast().playCost;
-                if (currentPlayer == 1)
-                    memory.adjustMemory(memoryCost);
-                else
-                    memory.adjustMemory(-memoryCost);
+                memoryMarker(player.battleArea.getLast().playCost);
 
                 continue;
             }
-
-            // TODO: Attack
-
         }
     }
 
@@ -396,7 +379,8 @@ public class Mechanism {
          * 4. After that, switch the turn to the opponent
          */
 
-        util.logger(player, turn, Phase.END_TURN);
+        log.logger(player.hand);
+        log.logger(player, turn, Phase.END_TURN);
         switchTurn();
     }
 
@@ -414,35 +398,34 @@ public class Mechanism {
         }
     }
 
-    private void memoryMarker() {
-        /**
-         * Start of game, memory is set to 0
-         *
-         * On main phase, refer to card's Play Cost or Digivolve Cost (if digivolving)
-         *
-         * Both player's refer to same memory gauge
-         *
-         * Player 1 memory = 1, Player 2 memory = -1
-         * When current player's turn and memory = 0, still can play cards
-         * If current player's memory < 0, switch turn
-         */
-
-        // Will get back to this part later
-//        if (player1.isTurn) {
-//            if (player1.memory < 0)
-//                switchTurn();
-//        } else {
-//            if (player2.memory < 0)
-//                switchTurn();
-//        }
+    private void memoryMarker(int memoryCost) {
+        if (currentPlayer == 1)
+            memory.adjustMemory(memoryCost);
+        else
+            memory.adjustMemory(-memoryCost);
     }
 
-    public Card digivolve(@NotNull Player player, Card digivolution, @NotNull Card digimon) {
+    @NotNull
+    @Contract("_, _, _ -> param3")
+    private Card digivolve(@NotNull Player player, Card digivolution, @NotNull Card digimon) {
         digimon.previousDigivolution = digivolution;
 
-        util.logger(player, digimon, Phase.MAIN_DIGIVOLVE);
+        log.logger(player, digimon, Phase.MAIN_DIGIVOLVE);
 
         drawCards(player, 1);
         return digimon;
+    }
+
+    private void attack(Player player, List<Card> security) {
+
+    }
+
+    private void fromBattleAreaToTrash(Player player, Card card) {
+        if (card.previousDigivolution != null)
+            fromBattleAreaToTrash(player, card.previousDigivolution);
+
+        player.trash.add(card);
+        log.logger(player, card, Phase.MAIN_TRASH, "Battle Area!", "Trash!");
+        card.previousDigivolution = null;
     }
 }

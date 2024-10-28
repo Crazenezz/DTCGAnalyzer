@@ -1,7 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import implementation.Mechanism;
-import implementation.Util;
+import implementation.util.Util;
 import model.Deck;
 import model.Player;
 

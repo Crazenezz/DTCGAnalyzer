@@ -3,6 +3,7 @@ package model.card;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -43,6 +44,11 @@ public class Card {
     // Not from DB
     @Getter
     private boolean suspended;
+
+    @Getter
+    @Setter
+    private boolean disoriented = true;
+
     // TODO: Not used for now
     private Price price;
     private String image;
@@ -100,4 +106,5 @@ public class Card {
 
         return trait;
     }
+
 }

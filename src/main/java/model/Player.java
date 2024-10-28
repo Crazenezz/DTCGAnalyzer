@@ -1,6 +1,6 @@
 package model;
 
-import implementation.Util;
+import implementation.util.Logger;
 import model.card.Card;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class Player {
-    private final Util util;
+    private final Logger log;
     public Deck deck;
     public List<Card> hand;
     public Stack<Card> securityStack;
@@ -29,14 +29,18 @@ public class Player {
         this.name = name;
         this.deck = deck;
 
-        util = new Util();
+        log = new Logger();
     }
 
     public void unsuspendAll() {
         for (Card card : battleArea) {
             if (card.isSuspended()) {
                 card.unsuspend();
-                util.logger(this, card, Phase.UNSUSPEND);
+                log.logger(this, card, Phase.UNSUSPEND);
+            }
+
+            if (card.isDisoriented()) {
+                card.setDisoriented(false);
             }
         }
     }
