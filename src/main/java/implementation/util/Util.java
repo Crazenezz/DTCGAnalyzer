@@ -105,7 +105,7 @@ public class Util {
         return -1;
     }
 
-    public int getCardWithLowestLevelCost(@NotNull List<Card> list, CardType type) {
+    public int getCardWithLowestLevelCost(@NotNull List<Card> list) {
         int index = -1;
         int level = 7;
         int playCost = 21;
@@ -131,17 +131,17 @@ public class Util {
 
     public DigivolutionObject digivolveTo(List<Card> hand, @NotNull List<Card> area) {
         DigivolutionObject digivolutionObject = new DigivolutionObject();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         for (int indexFrom = 0; indexFrom < area.size(); indexFrom++) {
             Object object = area.get(indexFrom);
 
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             Card cardOnBA = mapper.convertValue(object, Card.class);
 
             if (cardOnBA.translateType() == CardType.DIGIMON && cardOnBA.level < 7) {
                 for (int indexTo = 0; indexTo < hand.size(); indexTo++) {
-                    object = area.get(indexTo);
+                    object = hand.get(indexTo);
                     Card cardOnHand = mapper.convertValue(object, Card.class);
 
                     if (cardOnHand.translateType() == CardType.DIGIMON && cardOnHand.level == (cardOnBA.level + 1)) {
@@ -154,10 +154,10 @@ public class Util {
             }
         }
 
-        return digivolutionObject;
+        return null;
     }
 
-    public int getAttackerDigimon(List<Card> list) {
+    public int getAttackerDigimon(@NotNull List<Card> list) {
         for (int i = 0; i < list.size(); i++) {
             Object object = list.get(i);
 

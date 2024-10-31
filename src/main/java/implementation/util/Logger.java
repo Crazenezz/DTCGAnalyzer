@@ -12,15 +12,30 @@ import java.util.Objects;
 
 public class Logger {
 
-    public void logger(List<Card> list) {
+    public void logger(@NotNull List<Card> list, String area) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
         for (int i = 0; i < list.size(); i++) {
             Object object = list.get(i);
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             Card card = mapper.convertValue(object, Card.class);
 
-            System.out.println("On Hand: " + i + ", " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+            if (card.previousDigivolution == null)
+                System.out.println("On " + area + ": " + i + ", " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+            else {
+                System.out.print("On " + area + ": " + i + ", " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+                printPreviousNode(card.previousDigivolution);
+                System.out.println();
+            }
+        }
+    }
+
+    private void printPreviousNode(@NotNull Card card) {
+        if (card.previousDigivolution == null) {
+            System.out.print(" -> " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+        } else {
+            System.out.print(" -> " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+            printPreviousNode(card.previousDigivolution);
         }
     }
 

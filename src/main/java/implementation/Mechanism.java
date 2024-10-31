@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.EmptyStackException;
-import java.util.List;
 
 import static java.lang.System.exit;
 
@@ -26,7 +25,7 @@ public class Mechanism {
     private boolean endGame = false;
     private boolean firstTurn = true;
     private int turn = 0;
-    private Memory memory;
+    private final Memory memory;
 
     public Mechanism(Player player1, Player player2) {
         this.player1 = player1;
@@ -99,20 +98,11 @@ public class Mechanism {
     }
 
     private void startTurn(Player player) {
-        /**
-         * Implementation for Start of Your Turn Phase
-         *
-         * Check if there are any effects that trigger at the start of the turn, with following keywords:
-         * 1. Perform Rules Processing
-         * 2. Start of Your Turn
-         * 3. Start of Opponent's Turn
-         * 4. Start of All Turns
-         * 5. After that, proceed to the next phase, unsuspend phase
-         */
         turn++;
         log.logger(player, turn, Phase.START_TURN);
         log.logger(player, memory.getMemory());
-        log.logger(player.hand);
+        log.logger(player.hand, "Hand");
+        log.logger(player.battleArea, "Battle Area");
 
 
         // Check if any card on battle area, with card_effect [Start of Your Turn], trigger the effect
@@ -274,7 +264,8 @@ public class Mechanism {
                             log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Trash!");
 
                             // TODO: Need to breakdown the each of digivolution card to trash
-                            fromBattleAreaToTrash(player, player.battleArea.remove(index));
+                            fromBattleAreaToTrash(player, player.battleArea.get(index));
+                            player.battleArea.remove(index);
                         }
                     } else if (securityCard.translateType() == CardType.TAMER) {
                         // TODO: Implement [Security Effect] of a Tamer Card (assume, Play Free to Battle Area)
@@ -291,95 +282,85 @@ public class Mechanism {
                     endGame = true;
                     exit(0);
                 }
-            }
 
-            if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 2) {
-                index = util.getCardFromLevel(player.hand, 3);
-                if (index != -1) {
-                    player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
-
-                    memoryMarker(player.breedingArea.getLast().digivolutions.getFirst().cost);
-                    continue;
-                }
-            } else if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level == 3) {
-                index = util.getCardFromLevel(player.hand, 4);
-                if (index != -1) {
-                    player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.remove(index)));
-
-                    memoryMarker(player.breedingArea.getLast().digivolutions.getFirst().cost);
-                    continue;
-                }
-            }
-
-            DigivolutionObject digivolutionObject;
-            try {
-                // TODO: Need to check what makes IndexOutofBoundsException & IllegalArgumentException
-                digivolutionObject = util.digivolveTo(player.hand, player.battleArea);
-
-                if (digivolutionObject.indexTo != -1 && digivolutionObject.indexFrom != -1 && player.battleArea.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON && player.hand.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON) {
-                    player.battleArea.set(digivolutionObject.indexTo, digivolve(player, player.battleArea.get(digivolutionObject.indexFrom), player.hand.remove(digivolutionObject.indexFrom)));
-
-                    memoryMarker(player.battleArea.get(digivolutionObject.indexTo).digivolutions.getFirst().cost);
-                    continue;
-                }
-            } catch (IndexOutOfBoundsException ex) {
-                memory.skipTurn(currentPlayer);
-
-                log.logger(player, Phase.SKIP_MAIN);
                 continue;
             }
 
+            if (!player.breedingArea.isEmpty() && player.breedingArea.getLast().level >= 2) {
+                index = util.getCardFromLevel(player.hand, player.breedingArea.getLast().level + 1);
+                if (index != -1) {
+
+                    player.breedingArea.set(0, digivolve(player, player.breedingArea.getLast(), player.hand.get(index)));
+                    player.hand.remove(index);
+                    memoryMarker(player, player.breedingArea.getLast().digivolutions.getFirst().cost);
+                    continue;
+                }
+            }
+
+            DigivolutionObject digivolutionObject = util.digivolveTo(player.hand, player.battleArea);
+
+            if (digivolutionObject != null) {
+                if (digivolutionObject.indexTo != -1 &&
+                        digivolutionObject.indexFrom != -1 &&
+                        digivolutionObject.indexFrom < player.battleArea.size() &&
+                        digivolutionObject.indexTo < player.hand.size() &&
+                        player.battleArea.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON &&
+                        player.hand.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON) {
+
+                    player.battleArea.set(digivolutionObject.indexFrom,
+                            digivolve(player,
+                                    player.battleArea.get(digivolutionObject.indexFrom),
+                                    player.hand.get(digivolutionObject.indexTo)));
+                    player.hand.remove(digivolutionObject.indexTo);
+
+                    memoryMarker(player, player.battleArea.get(digivolutionObject.indexFrom).digivolutions.getFirst().cost);
+                    continue;
+                }
+            }
 
             index = util.getCardFromType(player.hand, CardType.TAMER);
             if (index != -1) {
-                player.battleArea.add(player.hand.remove(index));
+                player.battleArea.add(player.hand.get(index));
+                player.hand.remove(index);
                 log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
 
                 // TODO: Need to trigger [On Play] Effect
 
-                memoryMarker(player.battleArea.getLast().playCost);
+                memoryMarker(player, player.battleArea.getLast().playCost);
 
                 continue;
             }
 
-            index = util.getCardWithLowestLevelCost(player.hand, CardType.DIGIMON);
+            index = util.getCardWithLowestLevelCost(player.hand);
             if (index != -1) {
-                player.battleArea.add(player.hand.remove(index));
+                player.battleArea.add(player.hand.get(index));
+                player.hand.remove(index);
                 log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
 
                 // TODO: Need to trigger [On Play] Effect
 
-                memoryMarker(player.battleArea.getLast().playCost);
+                memoryMarker(player, player.battleArea.getLast().playCost);
 
                 continue;
             }
 
-            index = util.getCardWithLowestLevelCost(player.hand, CardType.OPTION);
+            index = util.getCardWithLowestLevelCost(player.hand);
             if (index != -1) {
-                player.battleArea.add(player.hand.remove(index));
+                player.battleArea.add(player.hand.get(index));
+                player.hand.remove(index);
                 log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
 
                 // TODO: Need to trigger [On Play] Effect
 
-                memoryMarker(player.battleArea.getLast().playCost);
-
-                continue;
+                memoryMarker(player, player.battleArea.getLast().playCost);
             }
         }
     }
 
-    private void endTurn(Player player) {
-        /**
-         * Implementation for End of Your Turn Phase
-         *
-         * Check if there are any effects that trigger at the end of the turn, with following keywords:
-         * 1. End of Your Turn
-         * 2. End of Opponent's Turn
-         * 3. End of All Turns
-         * 4. After that, switch the turn to the opponent
-         */
-
-        log.logger(player.hand);
+    private void endTurn(@NotNull Player player) {
+        log.logger(player.hand, "Hand");
+        log.logger(player.battleArea, "Battle Area");
+        log.logger(player.trash, "Trash");
         log.logger(player, turn, Phase.END_TURN);
         switchTurn();
     }
@@ -398,11 +379,13 @@ public class Mechanism {
         }
     }
 
-    private void memoryMarker(int memoryCost) {
+    private void memoryMarker(Player player, int memoryCost) {
         if (currentPlayer == 1)
             memory.adjustMemory(memoryCost);
         else
             memory.adjustMemory(-memoryCost);
+
+        log.logger(player, memory.getMemory());
     }
 
     @NotNull
@@ -416,11 +399,7 @@ public class Mechanism {
         return digimon;
     }
 
-    private void attack(Player player, List<Card> security) {
-
-    }
-
-    private void fromBattleAreaToTrash(Player player, Card card) {
+    private void fromBattleAreaToTrash(Player player, @NotNull Card card) {
         if (card.previousDigivolution != null)
             fromBattleAreaToTrash(player, card.previousDigivolution);
 
