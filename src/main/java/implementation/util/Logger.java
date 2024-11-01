@@ -13,17 +13,12 @@ import java.util.Objects;
 public class Logger {
 
     public void logger(@NotNull List<Card> list, String area) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
         for (int i = 0; i < list.size(); i++) {
-            Object object = list.get(i);
-            Card card = mapper.convertValue(object, Card.class);
-
+            Card card = list.get(i);
             if (card.previousDigivolution == null)
-                System.out.println("On " + area + ": " + i + ", " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+                System.out.println("On " + area + ": " + i + ", " + card.cardType + " card: " + card.name + " (" + card.number + ")");
             else {
-                System.out.print("On " + area + ": " + i + ", " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+                System.out.print("On " + area + ": " + i + ", " + card.cardType + " card: " + card.name + " (" + card.number + ")");
                 printPreviousNode(card.previousDigivolution);
                 System.out.println();
             }
@@ -32,9 +27,9 @@ public class Logger {
 
     private void printPreviousNode(@NotNull Card card) {
         if (card.previousDigivolution == null) {
-            System.out.print(" -> " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+            System.out.print(" -> " + card.cardType + " card: " + card.name + " (" + card.number + ")");
         } else {
-            System.out.print(" -> " + card.translateType() + " card: " + card.name + " (" + card.number + ")");
+            System.out.print(" -> " + card.cardType + " card: " + card.name + " (" + card.number + ")");
             printPreviousNode(card.previousDigivolution);
         }
     }
@@ -54,7 +49,7 @@ public class Logger {
 
     public void logger(Player player, Card card, Phase phase, String area) {
         if (Objects.requireNonNull(phase) == Phase.DRAW)
-            System.out.println("Player: " + player.name + ", draw " + card.translateType() + " card, " + card.name + " (" + card.number + ") to hand!");
+            System.out.println("Player: " + player.name + ", draw " + card.cardType + " card, " + card.name + " (" + card.number + ") to hand!");
         else if (Objects.requireNonNull(phase) == Phase.UNSUSPEND)
             System.out.println("Player: " + player.name + ", set " + card.name + " (" + card.number + ") as active!");
         else if (Objects.requireNonNull(phase) == Phase.BREEDING)
@@ -62,7 +57,7 @@ public class Logger {
         else if (Objects.requireNonNull(phase) == Phase.BREEDING_MOVE)
             System.out.println("Player: " + player.name + ", move " + card.name + " (" + card.number + ") to Battle Area!");
         else if (Objects.requireNonNull(phase) == Phase.MAIN_PLAY)
-            System.out.println("Player: " + player.name + ", play a " + card.translateType() + " card, " + card.name + " (" + card.number + ") pay " + card.playCost + " memory, to Battle Area!");
+            System.out.println("Player: " + player.name + ", play a " + card.cardType + " card, " + card.name + " (" + card.number + ") pay " + card.playCost + " memory, to Battle Area!");
         else if (Objects.requireNonNull(phase) == Phase.MAIN_DIGIVOLVE)
             System.out.println("Player: " + player.name + ", digivolve " + card.previousDigivolution.name + " (" + card.previousDigivolution.number + ") to " + card.name + " (" + card.number + ") pay " + card.digivolutions.getFirst().cost + " memory, on " + area);
     }

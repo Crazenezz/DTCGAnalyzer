@@ -29,7 +29,7 @@ public class Keyword {
     }
 
     void piercing(Card attackingDigimon, Card defendingDigimon) {
-        if (defendingDigimon.translateDP() <= 0) {
+        if (defendingDigimon.getDigimonPower() <= 0) {
             // Check security if attacking Digimon survives
         }
     }
@@ -61,7 +61,7 @@ public class Keyword {
     }
 
     void retaliation(Card thisDigimon, Card opposingDigimon) {
-        if (thisDigimon.translateDP() <= 0) {
+        if (thisDigimon.getDigimonPower() <= 0) {
             // Delete the opposing Digimon
         }
     }
@@ -121,7 +121,7 @@ public class Keyword {
     }
 
     void alliance(Card attackingDigimon, Card supportingDigimon) {
-        attackingDigimon.addDP(supportingDigimon.translateDP());
+        attackingDigimon.setAdditionalDP(supportingDigimon.getDigimonPower());
         // Gain Security Attack +1
     }
 

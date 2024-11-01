@@ -242,7 +242,7 @@ public class Mechanism {
                 // TODO: Implementation Digimon Attack to Security Stack (compare DP if both DIGIMON for the card type)
                 Card attackerDigimon = player.battleArea.get(index);
                 attackerDigimon.suspend();
-                int attackerDP = attackerDigimon.translateDP();
+                int attackerDP = attackerDigimon.getDigimonPower();
 
                 // TODO: Only 1 check to Security Stack
                 Player opponent;
@@ -255,8 +255,8 @@ public class Mechanism {
                     Card securityCard = opponent.securityStack.pop();
                     log.logger(player, opponent, attackerDigimon, securityCard, Phase.MAIN_ATTACKING);
 
-                    if (securityCard.translateType() == CardType.DIGIMON) {
-                        if (attackerDP > securityCard.translateDP()) {
+                    if (securityCard.getCardType() == CardType.DIGIMON) {
+                        if (attackerDP > securityCard.getDigimonPower()) {
                             opponent.trash.add(securityCard);
                             log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Trash!");
                         } else {
@@ -267,7 +267,7 @@ public class Mechanism {
                             fromBattleAreaToTrash(player, player.battleArea.get(index));
                             player.battleArea.remove(index);
                         }
-                    } else if (securityCard.translateType() == CardType.TAMER) {
+                    } else if (securityCard.getCardType() == CardType.TAMER) {
                         // TODO: Implement [Security Effect] of a Tamer Card (assume, Play Free to Battle Area)
                         opponent.battleArea.add(securityCard);
                         log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Battle Area!");
@@ -304,8 +304,8 @@ public class Mechanism {
                         digivolutionObject.indexFrom != -1 &&
                         digivolutionObject.indexFrom < player.battleArea.size() &&
                         digivolutionObject.indexTo < player.hand.size() &&
-                        player.battleArea.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON &&
-                        player.hand.get(digivolutionObject.indexFrom).translateType() == CardType.DIGIMON) {
+                        player.battleArea.get(digivolutionObject.indexFrom).getCardType() == CardType.DIGIMON &&
+                        player.hand.get(digivolutionObject.indexTo).getCardType() == CardType.DIGIMON) {
 
                     player.battleArea.set(digivolutionObject.indexFrom,
                             digivolve(player,
@@ -390,21 +390,25 @@ public class Mechanism {
 
     @NotNull
     @Contract("_, _, _ -> param3")
-    private Card digivolve(@NotNull Player player, Card digivolution, @NotNull Card digimon) {
+    private Card digivolve(@NotNull Player player, @NotNull Card digivolution, @NotNull Card digimon) {
         digimon.previousDigivolution = digivolution;
+        digivolution.nextDigivolution = digimon;
 
         log.logger(player, digimon, Phase.MAIN_DIGIVOLVE);
 
-        drawCards(player, 1);
+        if (!player.deck.isMainDeckEmpty())
+            drawCards(player, 1);
+
         return digimon;
     }
 
     private void fromBattleAreaToTrash(Player player, @NotNull Card card) {
-        if (card.previousDigivolution != null)
+        if (card.previousDigivolution != null) {
             fromBattleAreaToTrash(player, card.previousDigivolution);
+            card.previousDigivolution = null;
+        }
 
         player.trash.add(card);
         log.logger(player, card, Phase.MAIN_TRASH, "Battle Area!", "Trash!");
-        card.previousDigivolution = null;
     }
 }

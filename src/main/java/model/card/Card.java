@@ -1,7 +1,8 @@
 package model.card;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import model.effect.Effect;
@@ -10,6 +11,7 @@ import java.util.List;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(using = CardDeserializer.class)
 public class Card extends Effect {
     @JsonProperty("card_number")
     public String number;
@@ -27,34 +29,43 @@ public class Card extends Effect {
     public List<Digivolution> digivolutions;
     @JsonProperty("level")
     public int level;
-    public int dp;
-    public Card previousDigivolution;
-    public Card nextDigivolution;
     @JsonProperty("card_colour")
-    private String cardColour;
+    public Colour cardColour;
     @JsonProperty("card_type")
-    private String cardType;
+    @Getter
+    public CardType cardType;
     @JsonProperty("attribute")
-    private String attribute;
+    public String attribute;
     @JsonProperty("form")
-    private String form;
+    public String form;
     @JsonProperty("type")
-    private String type;
+    public String type;
     @JsonProperty("digimon_power")
-    private String digimonPower;
+    @Getter
+    public int digimonPower;
+
     // Not from DB
     @Getter
     private boolean suspended;
 
     @Getter
+    private int securityAttack = 1;
+
     @Setter
+    @Getter
+    private int additionalDP;
+
+    @Setter
+    @Getter
     private boolean disoriented = true;
 
-    // TODO: Not used for now
-    private Price price;
-    private String image;
-    private String deckNumber;
-    private String rarity;
+    @Getter
+    public Trait trait;
+
+    @JsonManagedReference
+    public Card previousDigivolution;
+    @JsonBackReference
+    public Card nextDigivolution;
 
     public void suspend() {
         suspended = true;
@@ -64,48 +75,17 @@ public class Card extends Effect {
         suspended = false;
     }
 
-    public Colour translateColour() {
-        return switch (cardColour) {
-            case "Red" -> Colour.RED;
-            case "Blue" -> Colour.BLUE;
-            case "Yellow" -> Colour.YELLOW;
-            case "Green" -> Colour.GREEN;
-            case "Black" -> Colour.BLACK;
-            case "Purple" -> Colour.PURPLE;
-            case "White" -> Colour.WHITE;
-            default -> Colour.ALL;
-        };
+    public void setSecurityAttack(int securityAttack) {
+        this.securityAttack += securityAttack;
     }
 
-    public CardType translateType() {
-        return switch (cardType) {
-            case "Digimon" -> CardType.DIGIMON;
-            case "Digi-Egg" -> CardType.DIGIEGG;
-            case "Tamer" -> CardType.TAMER;
-            case "Option" -> CardType.OPTION;
-            default -> CardType.UNKNOWN;
-        };
+    public int getTotalDP() {
+        return digimonPower + additionalDP;
     }
 
-    public int translateDP() {
-        try {
-            return Integer.parseInt(digimonPower.replace(" DP", ""));
-        } catch (NumberFormatException ex) {
-            return 0;
-        }
-    }
-
-    public int addDP(int dp) {
-        return this.dp += dp;
-    }
-
-    public Trait getTrait() {
-        Trait trait = new Trait();
-        trait.attribute = attribute;
-        trait.form = form;
-        trait.type = type;
-
-        return trait;
+    public void resetAdditionalAttribute() {
+        additionalDP = 0;
+        securityAttack = 1;
     }
 
 }

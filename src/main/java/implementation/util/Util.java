@@ -45,12 +45,11 @@ public class Util {
     }
 
     public Card getCardFromNumber(@NotNull List<Card> list, String value) {
-        for (Object object : list.toArray()) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        for (Object object : list) {
             Card card = mapper.convertValue(object, Card.class);
-
             if (card.number.equalsIgnoreCase(value))
                 return card;
         }
@@ -60,11 +59,10 @@ public class Util {
 
     public List<Card> getListCardFromLevel(@NotNull List<Card> list, int level) {
         List<Card> result = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-        for (Object object : list.toArray()) {
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        for (Object object : list) {
             Card card = mapper.convertValue(object, Card.class);
 
             if (card.level == level)
@@ -75,14 +73,8 @@ public class Util {
     }
 
     public int getCardFromLevel(@NotNull List<Card> list, int level) {
-
         for (int i = 0; i < list.size(); i++) {
-
-            Object object = list.get(i);
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            Card card = mapper.convertValue(object, Card.class);
+            Card card = list.get(i);
 
             if (card.level == level)
                 return i;
@@ -92,14 +84,9 @@ public class Util {
 
     public int getCardFromType(@NotNull List<Card> list, CardType type) {
         for (int i = 0; i < list.size(); i++) {
+            Card card = list.get(i);
 
-            Object object = list.get(i);
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            Card card = mapper.convertValue(object, Card.class);
-
-            if (card.translateType() == type)
+            if (card.getCardType() == type)
                 return i;
         }
         return -1;
@@ -111,15 +98,11 @@ public class Util {
         int playCost = 21;
 
         for (int i = 0; i < list.size(); i++) {
-            Object object = list.get(i);
+            Card card = list.get(i);
 
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            Card card = mapper.convertValue(object, Card.class);
-
-            if (card.translateType() == CardType.DIGIMON && level > card.level && playCost > card.playCost)
+            if (card.getCardType() == CardType.DIGIMON && level > card.level && playCost > card.playCost)
                 index = i;
-            else if (card.translateType() == CardType.OPTION && playCost > card.playCost)
+            else if (card.getCardType() == CardType.OPTION && playCost > card.playCost)
                 index = i;
         }
         return index;
@@ -131,20 +114,15 @@ public class Util {
 
     public DigivolutionObject digivolveTo(List<Card> hand, @NotNull List<Card> area) {
         DigivolutionObject digivolutionObject = new DigivolutionObject();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         for (int indexFrom = 0; indexFrom < area.size(); indexFrom++) {
-            Object object = area.get(indexFrom);
+            Card cardOnBA = area.get(indexFrom);
 
-            Card cardOnBA = mapper.convertValue(object, Card.class);
-
-            if (cardOnBA.translateType() == CardType.DIGIMON && cardOnBA.level < 7) {
+            if (cardOnBA.getCardType() == CardType.DIGIMON && cardOnBA.level < 7) {
                 for (int indexTo = 0; indexTo < hand.size(); indexTo++) {
-                    object = hand.get(indexTo);
-                    Card cardOnHand = mapper.convertValue(object, Card.class);
+                    Card cardOnHand = hand.get(indexTo);
 
-                    if (cardOnHand.translateType() == CardType.DIGIMON && cardOnHand.level == (cardOnBA.level + 1)) {
+                    if (cardOnHand.getCardType() == CardType.DIGIMON && cardOnHand.level == (cardOnBA.level + 1)) {
                         digivolutionObject.indexFrom = indexFrom;
                         digivolutionObject.indexTo = indexTo;
 
@@ -159,13 +137,9 @@ public class Util {
 
     public int getAttackerDigimon(@NotNull List<Card> list) {
         for (int i = 0; i < list.size(); i++) {
-            Object object = list.get(i);
+            Card card = list.get(i);
 
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            Card card = mapper.convertValue(object, Card.class);
-
-            if (card.translateType() == CardType.DIGIMON && !card.isSuspended() && !card.isDisoriented())
+            if (card.getCardType() == CardType.DIGIMON && !card.isSuspended() && !card.isDisoriented())
                 return i;
         }
         return -1;
