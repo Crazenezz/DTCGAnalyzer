@@ -2,10 +2,12 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import implementation.util.Util;
+import lombok.SneakyThrows;
 import model.card.Card;
 import model.card.CardMetadata;
 
@@ -41,6 +43,7 @@ public class Deck {
         shuffleMainDeck();
     }
 
+    @SneakyThrows
     private void setDigiEggDeck(String fileDeck) throws JsonProcessingException, ClassNotFoundException {
         digiEggDeck = new ArrayList<>();
 
@@ -50,13 +53,14 @@ public class Deck {
         List<Card> cardList = mapper.readValue(util.printInputStream(util.getFileFromResourceAsStream(fileDeck)), List.class);
 
         for (CardMetadata data : digiEggDeckMetaData) {
-            Card card = util.getCardFromNumber(cardList, data.cardNumber);
-
-            for (int i = 0; i < Integer.parseInt(data.quantity); i++)
+            for (int i = 0; i < Integer.parseInt(data.quantity); i++) {
+                Card card = util.getCardFromNumber(cardList, data.cardNumber);
                 digiEggDeck.add(card);
+            }
         }
     }
 
+    @SneakyThrows
     private void setMainDeck(String fileDeck) throws JsonProcessingException, ClassNotFoundException {
         mainDeck = new ArrayList<>();
 
@@ -66,10 +70,10 @@ public class Deck {
         List<Card> cardList = mapper.readValue(util.printInputStream(util.getFileFromResourceAsStream(fileDeck)), List.class);
 
         for (CardMetadata data : mainDeckMetaData) {
-            Card card = util.getCardFromNumber(cardList, data.cardNumber);
-
-            for (int i = 0; i < Integer.parseInt(data.quantity); i++)
+            for (int i = 0; i < Integer.parseInt(data.quantity); i++) {
+                Card card = util.getCardFromNumber(cardList, data.cardNumber);
                 mainDeck.add(card);
+            }
         }
     }
 

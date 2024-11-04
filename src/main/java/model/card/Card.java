@@ -2,7 +2,6 @@ package model.card;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import model.effect.Effect;
@@ -62,9 +61,7 @@ public class Card extends Effect {
     @Getter
     public Trait trait;
 
-    @JsonManagedReference
     public Card previousDigivolution;
-    @JsonBackReference
     public Card nextDigivolution;
 
     public void suspend() {

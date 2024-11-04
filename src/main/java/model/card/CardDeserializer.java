@@ -15,9 +15,10 @@ import java.util.List;
 public class CardDeserializer extends JsonDeserializer<Card> {
     @Override
     public Card deserialize(@NotNull JsonParser parser, DeserializationContext context) throws IOException {
-        Card card = new Card();
         ObjectMapper mapper = (ObjectMapper) parser.getCodec();
         JsonNode node = mapper.readTree(parser);
+
+        Card card = new Card();
 
         // Deserialize each field manually
         card.number = node.get("card_number").asText();

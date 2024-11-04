@@ -331,7 +331,7 @@ public class Mechanism {
                 continue;
             }
 
-            index = util.getCardWithLowestLevelCost(player.hand);
+            index = util.getCardWithLowestLevelCost(player.hand, memory, currentPlayer);
             if (index != -1) {
                 player.battleArea.add(player.hand.get(index));
                 player.hand.remove(index);
@@ -340,19 +340,9 @@ public class Mechanism {
                 // TODO: Need to trigger [On Play] Effect
 
                 memoryMarker(player, player.battleArea.getLast().playCost);
-
-                continue;
-            }
-
-            index = util.getCardWithLowestLevelCost(player.hand);
-            if (index != -1) {
-                player.battleArea.add(player.hand.get(index));
-                player.hand.remove(index);
-                log.logger(player, player.battleArea.getLast(), Phase.MAIN_PLAY, "Battle Area!");
-
-                // TODO: Need to trigger [On Play] Effect
-
-                memoryMarker(player, player.battleArea.getLast().playCost);
+            } else {
+                memory.skipTurn(currentPlayer);
+                log.logger(player, Phase.SKIP_MAIN);
             }
         }
     }

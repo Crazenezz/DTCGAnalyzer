@@ -2,6 +2,7 @@ package implementation.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import implementation.Memory;
 import model.DigivolutionObject;
 import model.card.Card;
 import model.card.CardType;
@@ -92,7 +93,7 @@ public class Util {
         return -1;
     }
 
-    public int getCardWithLowestLevelCost(@NotNull List<Card> list) {
+    public int getCardWithLowestLevelCost(@NotNull List<Card> list, Memory memory, int currentPlayer) {
         int index = -1;
         int level = 7;
         int playCost = 21;
@@ -100,9 +101,10 @@ public class Util {
         for (int i = 0; i < list.size(); i++) {
             Card card = list.get(i);
 
-            if (card.getCardType() == CardType.DIGIMON && level > card.level && playCost > card.playCost)
+            // TODO: Need to implement max limit memory for each card that will be play (exclude from search)
+            if (card.getCardType() == CardType.DIGIMON && level > card.level && playCost > card.playCost && card.playCost <= memory.remainingMemory(card.playCost, currentPlayer))
                 index = i;
-            else if (card.getCardType() == CardType.OPTION && playCost > card.playCost)
+            else if (card.getCardType() == CardType.OPTION && playCost > card.playCost && card.playCost <= memory.remainingMemory(card.playCost, currentPlayer))
                 index = i;
         }
         return index;

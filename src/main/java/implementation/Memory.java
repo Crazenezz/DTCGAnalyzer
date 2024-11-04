@@ -24,5 +24,12 @@ public class Memory {
         else
             this.memory = -3;
     }
+
+    public int remainingMemory(int amount, int currentPlayer) {
+        if (currentPlayer == 1)
+            return right - amount;
+        else
+            return left + amount;
+    }
 }
 
