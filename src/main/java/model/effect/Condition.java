@@ -11,6 +11,7 @@ public class Condition {
     private ConditionType type;
     private SpecificConditionType specific;
     private int threshold;
+    private Duration duration;
 
     public Condition(ConditionType type) {
         this.type = type;

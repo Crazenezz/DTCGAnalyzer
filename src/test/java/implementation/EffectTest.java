@@ -9,13 +9,13 @@ import java.util.Map;
 
 public class EffectTest {
     private final String[] conditions = {
-            "[Your Turn] For every 2 digivolution cards this Digimon has, it gains ＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
-            "[Your Turn] When this Digimon is blocked, gain 3 memory.",
-            "[Your Turn] All of your Digimon get +1000 DP.",
-            "[Your Turn] This Digimon gets +1000 DP.",
-            "[Your Turn] While this Digimon has 4 or more digivolution cards, it gets +1000 DP.",
-            "[Your Turn] While your opponent has a Digimon with no digivolution cards, this Digimon gains ＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
-            "[Your Turn] This Digimon gets +1000 DP when battling an opponent's Digimon that has no digivolution cards."
+        "[Your Turn] For every 2 digivolution cards this Digimon has, it gains ＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
+        "[Your Turn] When this Digimon is blocked, gain 3 memory.",
+        "[Your Turn] All of your Digimon get +1000 DP.",
+        "[Your Turn] This Digimon gets +1000 DP.",
+        "[Your Turn] While this Digimon has 4 or more digivolution cards, it gets +1000 DP.",
+        "[Your Turn] While your opponent has a Digimon with no digivolution cards, this Digimon gains ＜Security Attack +1＞ (This Digimon checks 1 additional security card).",
+        "[Your Turn] This Digimon gets +1000 DP when battling an opponent's Digimon that has no digivolution cards."
     };
 
     private EffectParser effectParser;

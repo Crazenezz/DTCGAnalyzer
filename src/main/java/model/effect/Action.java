@@ -73,6 +73,7 @@ public class Action {
             }
             case ActionType.SECURITY_ATTACK -> increaseSecurityAttack(card, threshold);
             case ActionType.GAIN_MEMORY -> gainMemory(gameState.getCurrentPlayer(), gameState.getMemory(), threshold);
+            case ActionType.DELETE_ONE_DIGIMON -> deleteOpponentDigimon(player, threshold, gameState);
         }
     }
 
@@ -89,5 +90,21 @@ public class Action {
 
     private void increaseDP(@NotNull Card card, int additionalDP) {
         card.setAdditionalDP(additionalDP);
+    }
+
+    private void deleteOpponentDigimon(@NotNull Player player, int totalDigimon, GameState gameState) {
+        int index = 0;
+        for (Card card : player.battleArea) {
+            if (card.getCardType() == CardType.DIGIMON) {
+                gameState.fromBattleAreaToTrash(player, player.battleArea.get(index));
+                player.battleArea.remove(index);
+
+                if (totalDigimon == 0)
+                    break;
+                else
+                    totalDigimon--;
+            }
+            index++;
+        }
     }
 }

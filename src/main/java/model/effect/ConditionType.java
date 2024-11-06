@@ -5,6 +5,6 @@ public enum ConditionType {
     OPPONENT_DIGIMON,
     BLOCKED,
     DIGIMON_DP,
-    MEMORY_GAIN,
+    MAIN_EFFECT,
     DEFAULT
 }

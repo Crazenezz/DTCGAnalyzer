@@ -48,7 +48,7 @@ public class Mechanism {
         log.logger("Revealed Security Card: " + securityCard.name + " (" + securityCard.number + ")");
 
         if (!securityCard.securityEffect.isEmpty()) {
-            Map<Condition, Action> effects = effectParser.parseEffect(securityCard.securityEffect);
+            Map<Condition, Action> effects = effectParser.parseEffect(securityCard.securityEffect, securityCard);
 
             // Apply each [Security] effect
             for (Map.Entry<Condition, Action> entry : effects.entrySet()) {
@@ -241,7 +241,7 @@ public class Mechanism {
                             log.logger(opponent, securityCard, Phase.MAIN_TRASH, "Security Stack!", "Trash!");
 
                             // TODO: Need to breakdown the each of digivolution card to trash
-                            fromBattleAreaToTrash(player, player.battleArea.get(index));
+                            gameState.fromBattleAreaToTrash(player, player.battleArea.get(index));
                             player.battleArea.remove(index);
                         }
                     } else if (securityCard.getCardType() == CardType.TAMER) {
@@ -374,15 +374,5 @@ public class Mechanism {
             drawCards(player, 1);
 
         return digimon;
-    }
-
-    private void fromBattleAreaToTrash(Player player, @NotNull Card card) {
-        if (card.previousDigivolution != null) {
-            fromBattleAreaToTrash(player, card.previousDigivolution);
-            card.previousDigivolution = null;
-        }
-
-        player.trash.add(card);
-        log.logger(player, card, Phase.MAIN_TRASH, "Battle Area!", "Trash!");
     }
 }
