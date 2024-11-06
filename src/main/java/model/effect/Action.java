@@ -55,6 +55,10 @@ public class Action {
         return super.toString();
     }
 
+    public void executeAction(Player player, GameState gameState) {
+
+    }
+
     public void executeAction(Player player, Card card, Condition condition, GameState gameState) {
         switch (type) {
             case ActionType.INCREASE_DP -> {

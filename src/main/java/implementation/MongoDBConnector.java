@@ -9,7 +9,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class MongoDBConnector implements MongoDBService {
-    private final String connectionString = "mongodb+srv://edward_tumuwo:jgw1JtTD3s0WyF8H@digimontcgcatalogcluste.bjlysu8.mongodb.net/?retryWrites=true&w=majority&appName=DigimonTCGCatalogCluster";
+    private String connectionString;
     private MongoClient mongoClient;
 
     public MongoDBConnector() {

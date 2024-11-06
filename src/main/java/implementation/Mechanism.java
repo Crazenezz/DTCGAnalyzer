@@ -38,6 +38,32 @@ public class Mechanism {
         gameState = new GameState(memory, 0);
     }
 
+    public void applySecurityEffect(Player attacker, @NotNull Player defender) {
+        if (defender.securityStack.isEmpty()) {
+            log.logger(defender.name + " has no more Security Cards in Stack. Direct Attack, " + attacker.name + " wins!");
+            exit(0);
+        }
+
+        Card securityCard = defender.securityStack.removeFirst();
+        log.logger("Revealed Security Card: " + securityCard.name + " (" + securityCard.number + ")");
+
+        if (!securityCard.securityEffect.isEmpty()) {
+            Map<Condition, Action> effects = effectParser.parseEffect(securityCard.securityEffect);
+
+            // Apply each [Security] effect
+            for (Map.Entry<Condition, Action> entry : effects.entrySet()) {
+                Condition condition = entry.getKey();
+                Action action = entry.getValue();
+
+                // TODO: Implement the detail of Security Condition & Action
+                if (condition.isSecurityCondition()) {  // Check if this is a [Security] condition
+                    action.executeAction(defender, gameState);  // Apply the action to the defending player
+                    log.logger("Applied [Security] Effect: " + action.toString());
+                }
+            }
+        }
+    }
+
     public void drawCards(Player player, int numberOfCards) {
         for (int i = 0; i < numberOfCards; i++) {
             player.hand.add(player.deck.draw());
@@ -61,7 +87,7 @@ public class Mechanism {
 
     public void determineStartingPlayer() {
         gameState.setCurrentPlayer(Math.random() < 0.5 ? 1 : 2);
-        System.out.println("Player " + gameState.getCurrentPlayer() + " goes first.");
+        log.logger("Player " + gameState.getCurrentPlayer() + " goes first.");
         if (gameState.getCurrentPlayer() == 1) {
             player1.isTurn = true;
         } else {
@@ -72,7 +98,7 @@ public class Mechanism {
     public void drawInitialHands() {
         drawCards(player1, 5);
         drawCards(player2, 5);
-        System.out.print("\n");
+        log.logger("\n");
     }
 
     public void placeSecurityStack(Player player) {
@@ -132,11 +158,11 @@ public class Mechanism {
 
     private void drawPhase(Player player) {
         if (player1.isTurn && player1.deck.isMainDeckEmpty()) {
-            System.out.println("Player 1 has no more cards in deck. Player 2 wins!");
+            log.logger("Player 1 has no more cards in deck. Player 2 wins!");
             gameState.setEndGame(true);
             exit(0);
         } else if (player2.isTurn && player2.deck.isMainDeckEmpty()) {
-            System.out.println("Player 2 has no more cards in deck. Player 1 wins!");
+            log.logger("Player 2 has no more cards in deck. Player 1 wins!");
             gameState.setEndGame(true);
             exit(0);
         }
@@ -229,7 +255,7 @@ public class Mechanism {
 
                     // TODO: Need to trigger [When Attacking] Effect
                 } catch (EmptyStackException ex) {
-                    System.out.println(opponent.name + " has no more Security Cards in Stack. Direct Attack, " + player.name + " wins!");
+                    log.logger(opponent.name + " has no more Security Cards in Stack. Direct Attack, " + player.name + " wins!");
                     gameState.setEndGame(true);
                     exit(0);
                 }

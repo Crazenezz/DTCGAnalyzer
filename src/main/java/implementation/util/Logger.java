@@ -89,4 +89,8 @@ public class Logger {
         if (Objects.requireNonNull(phase) == Phase.START_TURN)
             System.out.println("Effect applied from: " + card.name + " (" + card.number + "), with condition: " + condition.toString() + ", with action: " + action.toString() + " on Start Turn Phase!");
     }
+
+    public void logger(String logText) {
+        System.out.println(logText);
+    }
 }

@@ -69,4 +69,8 @@ public class Condition {
         }
         return false;
     }
+
+    public boolean isSecurityCondition() {
+        return false;
+    }
 }
