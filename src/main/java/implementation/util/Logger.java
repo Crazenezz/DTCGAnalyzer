@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import model.Phase;
 import model.Player;
 import model.card.Card;
+import model.effect.Action;
+import model.effect.Condition;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -81,5 +83,10 @@ public class Logger {
 
     public void logger(@NotNull Player player, int memory) {
         System.out.println("Player: " + player.name + ", current memory: " + memory);
+    }
+
+    public void logger(Condition condition, Action action, Card card, Phase phase) {
+        if (Objects.requireNonNull(phase) == Phase.START_TURN)
+            System.out.println("Effect applied from: " + card.name + " (" + card.number + "), with condition: " + condition.toString() + ", with action: " + action.toString() + " on Start Turn Phase!");
     }
 }

@@ -85,4 +85,11 @@ public class Card extends Effect {
         securityAttack = 1;
     }
 
+    public int digivolutionCount() {
+        if (previousDigivolution == null)
+            return 0;
+
+        return 1 + previousDigivolution.digivolutionCount();
+    }
+
 }

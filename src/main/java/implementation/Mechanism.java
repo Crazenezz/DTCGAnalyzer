@@ -8,11 +8,14 @@ import model.Phase;
 import model.Player;
 import model.card.Card;
 import model.card.CardType;
+import model.effect.Action;
+import model.effect.Condition;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.EmptyStackException;
+import java.util.Map;
 
 import static java.lang.System.exit;
 
@@ -21,19 +24,18 @@ public class Mechanism {
     private final Player player2;
     private final Util util;
     private final Logger log;
-    private int currentPlayer;
-    private boolean endGame = false;
-    private boolean firstTurn = true;
     private int turn = 0;
-    private final Memory memory;
+    private EffectParser effectParser;
+    private GameState gameState;
 
     public Mechanism(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
-        this.currentPlayer = 0;
         util = new Util();
         log = new Logger();
-        memory = new Memory();
+        Memory memory = new Memory();
+        effectParser = new EffectParser();
+        gameState = new GameState(memory, 0);
     }
 
     public void drawCards(Player player, int numberOfCards) {
@@ -58,9 +60,9 @@ public class Mechanism {
     }
 
     public void determineStartingPlayer() {
-        currentPlayer = Math.random() < 0.5 ? 1 : 2;
-        System.out.println("Player " + currentPlayer + " goes first.");
-        if (currentPlayer == 1) {
+        gameState.setCurrentPlayer(Math.random() < 0.5 ? 1 : 2);
+        System.out.println("Player " + gameState.getCurrentPlayer() + " goes first.");
+        if (gameState.getCurrentPlayer() == 1) {
             player1.isTurn = true;
         } else {
             player2.isTurn = true;
@@ -80,7 +82,7 @@ public class Mechanism {
     }
 
     public void mainGameFlow() {
-        while (!endGame) {
+        while (!gameState.isEndGame()) {
             if (player1.isTurn)
                 executePlayerTurn(player1);
             else
@@ -100,79 +102,28 @@ public class Mechanism {
     private void startTurn(Player player) {
         turn++;
         log.logger(player, turn, Phase.START_TURN);
-        log.logger(player, memory.getMemory());
+        log.logger(player, gameState.getMemory().getCurrentMemory());
         log.logger(player.hand, "Hand");
         log.logger(player.battleArea, "Battle Area");
-
 
         // Check if any card on battle area, with card_effect [Start of Your Turn], trigger the effect
         if (!player.battleArea.isEmpty()) {
             for (Card card : player.battleArea) {
-                if (card.effect.contains("[Start of Your Turn]")) {
-                    // TODO: Trigger the effect, how to read and how to trigger
+                Map<Condition, Action> effects = effectParser.parseEffect(card.effect);
+                for (Map.Entry<Condition, Action> entry : effects.entrySet()) {
+                    Condition condition = entry.getKey();
+                    Action action = entry.getValue();
+
+                    if (condition == null || action == null)
+                        continue;
+
+                    if (condition.evaluateCondition(player, card)) {  // Checks if the condition is met
+                        action.executeAction(player, card, condition, gameState);            // Executes the action if condition is true
+                        log.logger(condition, action, card, Phase.START_TURN);
+                    }
                 }
             }
         }
-    }
-
-    /**
-     * We know as Rules Processing the process by which the rules remove elements that should not exist in the battle area:
-     * <p>
-     * Send to the trash any Digimon with no DP in the Battle Area.
-     * Send to the trash any Option cards in the Battle Area (that were not placed in the Battle Area by an effect specifying to place it in the Battle Area)
-     * Deletes all Digimon with 0 DP.
-     * Effects still follow the Triggered Effects procedure, Rules Processing is a step within that procedure:
-     * <p>
-     * An effect has activated.
-     * Effects met their Trigger Condition from the previous effect trigger.
-     * Rules Processing removes elements that should not exist in the Battle Area.
-     * Effects met their Trigger Condition from rules processing trigger.
-     * Players then proceed with Triggered Effects procedures again.
-     * This can continue indefinitely, until all effects have been triggered and activated.
-     */
-    private void rulesProcessing() {
-        // Implementation for Rules Processing
-    }
-
-    /**
-     * Pending Activation
-     * Pending Activation (発揮待ち Hakki-machi?) is an official term used by the Detailed Rulebook that denotes when an effect is waiting for its player to activate it. An effect that has triggered enters "Pending Activation" status. The status is removed after an effect fails activation or is successfully activated.
-     * <p>
-     * Priority
-     * This is an unofficial term, and used only to illustrate the order of effects in this page.
-     * <p>
-     * An effect that has met its trigger conditions becomes pending activation with a priority to effects triggered before it. Any effects triggered by the same action or effect are considered to have triggered at the same time and as such have the same priority level assigned. In this page, effects will be assigned a priority number.
-     * <p>
-     * If a player has an effect with a higher priority, they must activate that effect first. If effects have the same priority, the turn player will activate first, before the opponent activates an effect. If a player has multiple effects with the same priority, the player chooses any of those effects to activate first. The order of effects with the same priority are not determined when they are triggered, and only when a player decides which effect to activate.
-     * <p>
-     * Procedure
-     * 1. All effects that met their trigger condition enter pending activation state with the same priority.
-     * 2. Repeat the following until all effects are no longer "Pending Activation".
-     * 2.1. The turn player chooses an effect with the highest priority. If the opposing turn player has an effect with a higher priority, the opponent chooses instead.
-     * 2.1.1. If the effect is optional, the player may choose to skip the following steps (2.1.2 to 2.1.5) and the effect is no longer "Pending Activation".
-     * 2.1.2. Check if the effect meets its activation conditions, if it fails to meet its activation conditions skip the following steps (2.1.3 to 2.1.5) and the effect is no longer marked "Pending Activation".
-     * 2.1.3. Effect is activated, and if it has [Once Per Turn] it cannot be activated again during the rest of this turn regardless of whether the actions in Step 5 are carried out or not.
-     * 2.1.4. Apply the actions listed in the effect.
-     * 2.1.4.1. If an Option was used by the card effect, instantly apply the Option's effect.
-     * 2.1.4.2. If an effect is activated by the card effect, instantly apply the actions in that effect.
-     * 2.1.4.3. If a Digimon leaves the Battle Area, instantly place its digivolution cards in trash.
-     * 2.2. All effects that met their trigger conditions in Step 2.1. are now triggered and become "pending activation" with a priority +1 to the current highest priority.
-     * 2.3. Perform Rules Processing:
-     * 2.3.1. Do the following simultaneously:
-     * 2.3.1.1. Send to the trash any Level 2 Digi-Eggs on the field.
-     * 2.3.1.2. Send to the trash any Option cards in the Battle Area (that were not placed in the Battle Area by an effect specifying to place it in the Battle Area)
-     * 2.3.1.3. Delete all Digimon with 0 DP on the field.
-     * 2.3.2. All effects that met their trigger conditions in Step 3.1. are now triggered and become "pending activation" with a priority +1 to the current highest priority.
-     * 2.3.2.1. This includes effects triggered in Step 2.2., if effects triggered at both Step 2.2, and Step 2.3.2. Effects triggered at Step 2.3.2. will have a higher priority than those triggered in Step 2.2.
-     * 3. Repeat Step 2 until there are no more effects marked as "Pending Activation".
-     */
-    private void pendingActivation() {
-        // Implementation for Pending Activation
-
-        // Implementation for Priority
-
-        // Implementation for Procedure
-
     }
 
     private void unsuspendPhase(@NotNull Player player) {
@@ -182,18 +133,18 @@ public class Mechanism {
     private void drawPhase(Player player) {
         if (player1.isTurn && player1.deck.isMainDeckEmpty()) {
             System.out.println("Player 1 has no more cards in deck. Player 2 wins!");
-            endGame = true;
+            gameState.setEndGame(true);
             exit(0);
         } else if (player2.isTurn && player2.deck.isMainDeckEmpty()) {
             System.out.println("Player 2 has no more cards in deck. Player 1 wins!");
-            endGame = true;
+            gameState.setEndGame(true);
             exit(0);
         }
 
-        if (!firstTurn) {
+        if (!gameState.isFirstTurn()) {
             drawCards(player, 1);
         } else
-            firstTurn = false;
+            gameState.setFirstTurn(false);
     }
 
     private void breedingPhase(@NotNull Player player) {
@@ -224,14 +175,14 @@ public class Mechanism {
      */
     private void mainPhase(Player player) {
         log.logger(player, Phase.START_MAIN);
-        log.logger(player, memory.getMemory());
+        log.logger(player, gameState.getMemory().getCurrentMemory());
 
         // TODO: Need to implementation check from hand to do efficient action
 
         int index;
-        while ((currentPlayer == 1 && memory.getMemory() < 1) || (currentPlayer == 2 && memory.getMemory() > -1)) {
+        while ((gameState.getCurrentPlayer() == 1 && gameState.getMemory().getCurrentMemory() < 1) || (gameState.getCurrentPlayer() == 2 && gameState.getMemory().getCurrentMemory() > -1)) {
             if (player.hand.isEmpty()) {
-                memory.skipTurn(currentPlayer);
+                gameState.getMemory().skipTurn(gameState.getCurrentPlayer());
 
                 log.logger(player, Phase.SKIP_MAIN);
             }
@@ -246,7 +197,7 @@ public class Mechanism {
 
                 // TODO: Only 1 check to Security Stack
                 Player opponent;
-                if (currentPlayer == 1)
+                if (gameState.getCurrentPlayer() == 1)
                     opponent = player2;
                 else
                     opponent = player1;
@@ -279,7 +230,7 @@ public class Mechanism {
                     // TODO: Need to trigger [When Attacking] Effect
                 } catch (EmptyStackException ex) {
                     System.out.println(opponent.name + " has no more Security Cards in Stack. Direct Attack, " + player.name + " wins!");
-                    endGame = true;
+                    gameState.setEndGame(true);
                     exit(0);
                 }
 
@@ -331,7 +282,7 @@ public class Mechanism {
                 continue;
             }
 
-            index = util.getCardWithLowestLevelCost(player.hand, memory, currentPlayer);
+            index = util.getCardWithLowestLevelCost(player.hand, gameState.getMemory(), gameState.getCurrentPlayer());
             if (index != -1) {
                 player.battleArea.add(player.hand.get(index));
                 player.hand.remove(index);
@@ -341,7 +292,7 @@ public class Mechanism {
 
                 memoryMarker(player, player.battleArea.getLast().playCost);
             } else {
-                memory.skipTurn(currentPlayer);
+                gameState.getMemory().skipTurn(gameState.getCurrentPlayer());
                 log.logger(player, Phase.SKIP_MAIN);
             }
         }
@@ -352,6 +303,11 @@ public class Mechanism {
         log.logger(player.battleArea, "Battle Area");
         log.logger(player.trash, "Trash");
         log.logger(player, turn, Phase.END_TURN);
+
+        for (Card card : player.battleArea) {
+            card.resetAdditionalAttribute();
+        }
+
         switchTurn();
     }
 
@@ -360,22 +316,22 @@ public class Mechanism {
             player1.isTurn = false;
             player2.isTurn = true;
 
-            currentPlayer = 2;
+            gameState.setCurrentPlayer(2);
         } else {
             player1.isTurn = true;
             player2.isTurn = false;
 
-            currentPlayer = 1;
+            gameState.setCurrentPlayer(1);
         }
     }
 
     private void memoryMarker(Player player, int memoryCost) {
-        if (currentPlayer == 1)
-            memory.adjustMemory(memoryCost);
+        if (gameState.getCurrentPlayer() == 1)
+            gameState.getMemory().adjustMemory(memoryCost);
         else
-            memory.adjustMemory(-memoryCost);
+            gameState.getMemory().adjustMemory(-memoryCost);
 
-        log.logger(player, memory.getMemory());
+        log.logger(player, gameState.getMemory().getCurrentMemory());
     }
 
     @NotNull
@@ -383,6 +339,8 @@ public class Mechanism {
     private Card digivolve(@NotNull Player player, @NotNull Card digivolution, @NotNull Card digimon) {
         digimon.previousDigivolution = digivolution;
         digivolution.nextDigivolution = digimon;
+
+        // TODO: Trigger or Register Effect?
 
         log.logger(player, digimon, Phase.MAIN_DIGIVOLVE);
 

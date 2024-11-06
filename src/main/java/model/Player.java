@@ -2,6 +2,7 @@ package model;
 
 import implementation.util.Logger;
 import model.card.Card;
+import model.effect.Effect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Player {
     public List<Card> breedingArea;
     public boolean isTurn;
     public String name;
+    public Effect effect;
 
     public Player(String name, Deck deck) {
         this.hand = new ArrayList<>();
@@ -30,6 +32,7 @@ public class Player {
         this.deck = deck;
 
         log = new Logger();
+        effect = new Effect();
     }
 
     public void unsuspendAll() {
